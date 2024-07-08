@@ -3,3 +3,4 @@ export 'login/login_screen.dart';
 export 'login/archivo_control_login_screen.dart';
 export 'transferencia_inventario/transferencia_origen_screen.dart';
 export 'transferencia_inventario/archivo_control_screen.dart';
+export 'transferencia_inventario/transferencia_destino_screen.dart';

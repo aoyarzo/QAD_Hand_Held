@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 
-class TransferenciaOrigenScreen extends ConsumerWidget {
-  static const name = 'trans-origen-screen';
+class TransferenciaDestinoScreen extends ConsumerWidget {
+  static const name = 'trans-destino-screen';
 
   final _controllerArticulo = TextEditingController();
   final _controllerUbiOrig = TextEditingController();
@@ -13,18 +13,33 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
   final _controllerRefOrig = TextEditingController();
   final _controllerCantidad = TextEditingController();
 
-  TransferenciaOrigenScreen({super.key});
+  final String articulo;
+  final String almacen;
+  final String ubicacion;
+  final String lote;
+  final String referencia;
+  final int cantidad;
+
+  TransferenciaDestinoScreen(this.articulo, this.almacen, this.ubicacion,
+      this.lote, this.referencia, this.cantidad,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
+
+    _controllerArticulo.text = articulo;
+    _controllerUbiOrig.text = ubicacion;
+    _controllerLoteOrig.text = lote;
+    _controllerRefOrig.text = referencia;
+    _controllerCantidad.text = cantidad.toString();
 
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(40),
           child: AppBar(
             backgroundColor: colorQAD,
-            title: const Text('Transferencia Origen',
+            title: const Text('Transferencia Destino',
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -44,24 +59,41 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
             ArticuloRow(
                 colorQAD: colorQAD,
                 textFieldArticuloVerify:
-                    textFieldArticuloVerify(_controllerArticulo)),
+                    textFieldArticuloConfirmacion(_controllerArticulo)),
             AlmacenRow(
                 colorQAD: colorQAD,
-                textFieldAlmacenVerify: textFieldAlmacenVerify()),
+                textFieldAlmacenVerify: textFieldAlmacenOrigenConfirmacion()),
             UbicacionRow(
                 colorQAD: colorQAD,
                 textFieldUbicacionVerify:
-                    textFieldUbicacionVerify(_controllerUbiOrig)),
+                    textFieldUbicacionOrigenConfirmacion(_controllerUbiOrig)),
             LoteRow(
                 colorQAD: colorQAD,
-                textFieldLoteOrigen: textFieldLoteOrigen(_controllerLoteOrig)),
+                textFieldLoteOrigen:
+                    textFieldLoteOrigenConfirmacion(_controllerLoteOrig)),
             ReferenciaRow(
                 colorQAD: colorQAD,
                 textFieldReferenciaOrigen:
-                    textFieldReferenciaOrigen(_controllerRefOrig)),
+                    textFieldReferenciaOrigenConfirmacion(_controllerRefOrig)),
+            AlmacenDestinoRow(
+                colorQAD: colorQAD,
+                textFieldAlmacenDestino: textFieldAlmacenDestino()),
+            UbicacionDestinoRow(
+                colorQAD: colorQAD,
+                textFieldUbicacionDestino:
+                    textFieldUbicacionDestino()),
+            LoteDestinoRow(
+                colorQAD: colorQAD,
+                textFieldLoteDestino:
+                    textFieldLoteDestino()),
+            ReferenciaDestinoRow(
+                colorQAD: colorQAD,
+                textFieldReferenciaDestino:
+                    textFieldReferenciaDestino()),
             CantidadRow(
                 colorQAD: colorQAD,
-                textFieldCantidad: textFieldCantidad(_controllerCantidad)),
+                textFieldCantidad:
+                    textFieldCantidadConfirmacion(_controllerCantidad)),
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () {
@@ -74,7 +106,7 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                 child: const Text(
-                  'Guardar',
+                  'Confirmar',
                   style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
@@ -87,26 +119,11 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
   }
 }
 
-TextFormField textFieldArticuloVerify(
-    TextEditingController controllerArticulo) {
-  return TextFormField(
-    controller: controllerArticulo,
-    //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
-    /*validator: (value) {
-        return (value != null && value.length < 9 && value.length > 0)
-            ? null
-            : 'Campo Vacío / Máx. 8 Caracteres';
-      },*/
-    //onChanged: (value) => buscarTpago(value, dbProvider),
-  );
-}
-
-TextFormField textFieldAlmacenVerify() {
+TextFormField textFieldAlmacenDestino() {
   return TextFormField(
     //controller: _controllerAlmacen,
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormFieldDestino(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -116,12 +133,11 @@ TextFormField textFieldAlmacenVerify() {
   );
 }
 
-TextFormField textFieldUbicacionVerify(
-    TextEditingController controllerUbicOrig) {
+TextFormField textFieldUbicacionDestino() {
   return TextFormField(
-    controller: controllerUbicOrig,
+    //controller: controllerUbicOrig,
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormFieldDestino(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -131,11 +147,11 @@ TextFormField textFieldUbicacionVerify(
   );
 }
 
-TextFormField textFieldLoteOrigen(TextEditingController controllerLoteOrig) {
+TextFormField textFieldLoteDestino() {
   return TextFormField(
-    controller: controllerLoteOrig,
+    //controller: controllerLoteOrig,
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormFieldDestino(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -145,12 +161,11 @@ TextFormField textFieldLoteOrigen(TextEditingController controllerLoteOrig) {
   );
 }
 
-TextFormField textFieldReferenciaOrigen(
-    TextEditingController controllerRefOrig) {
+TextFormField textFieldReferenciaDestino() {
   return TextFormField(
-    controller: controllerRefOrig,
+    //controller: controllerRefOrig,
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormFieldDestino(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -160,13 +175,13 @@ TextFormField textFieldReferenciaOrigen(
   );
 }
 
-
-TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
+TextFormField textFieldCantidadDestino(
+    TextEditingController controllerCantidad) {
   return TextFormField(
     controller: controllerCantidad,
     keyboardType: const TextInputType.numberWithOptions(),
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormFieldDestino(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -176,7 +191,97 @@ TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
   );
 }
 
-InputDecoration inputDecorationTextFormField() {
+TextFormField textFieldArticuloConfirmacion(
+    TextEditingController controllerArticulo) {
+  return TextFormField(
+    controller: controllerArticulo,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldAlmacenOrigenConfirmacion() {
+  return TextFormField(
+    //controller: _controllerAlmacen,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldUbicacionOrigenConfirmacion(
+    TextEditingController controllerUbicOrig) {
+  return TextFormField(
+    controller: controllerUbicOrig,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldLoteOrigenConfirmacion(
+    TextEditingController controllerLoteOrig) {
+  return TextFormField(
+    controller: controllerLoteOrig,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldReferenciaOrigenConfirmacion(
+    TextEditingController controllerRefOrig) {
+  return TextFormField(
+    controller: controllerRefOrig,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldCantidadConfirmacion(
+    TextEditingController controllerCantidad) {
+  return TextFormField(
+    controller: controllerCantidad,
+    keyboardType: const TextInputType.numberWithOptions(),
+    //autocorrect: false,
+    decoration: inputDecorationTextFormFieldDestino(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+InputDecoration inputDecorationTextFormFieldDestino() {
   return InputDecoration(
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: Colors.black38, width: 2),

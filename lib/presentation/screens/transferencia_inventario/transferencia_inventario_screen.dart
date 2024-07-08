@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
+import 'package:qad_hand_held/presentation/screens/screens.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 
 class TransferenciaInventarioScreen extends ConsumerWidget {
@@ -77,11 +78,22 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
       itemBuilder: (BuildContext context, int index) {
         var textStyleTituto = const TextStyle(
             color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600);
-        var textStyleDato = const TextStyle(color: Colors.black87, fontSize: 12);
-      
+        var textStyleDato =
+            const TextStyle(color: Colors.black87, fontSize: 12);
+
         return GestureDetector(
           onTap: () {
-            
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TransferenciaDestinoScreen(
+                            transfList[index].articulo, 
+                            transfList[index].almOrig, 
+                            transfList[index].ubiOrig, 
+                            transfList[index].lotOrig, 
+                            transfList[index].refOrig, 
+                            transfList[index].cantidad)));
           },
           child: Padding(
             padding: const EdgeInsets.all(3),
@@ -109,7 +121,8 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                             Container(
                                 alignment: Alignment.center,
                                 //height: 25,
-                                child: Text((index+1).toString(), style: textStyleDato)),
+                                child: Text((index + 1).toString(),
+                                    style: textStyleDato)),
                           ],
                         ),
                         Row(
@@ -117,12 +130,14 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                             Container(
                                 alignment: Alignment.center,
                                 //height: 25,
-                                child: Text('Dominio:', style: textStyleTituto)),
+                                child:
+                                    Text('Dominio:', style: textStyleTituto)),
                             const SizedBox(width: 5),
                             Container(
                                 alignment: Alignment.center,
                                 //height: 25,
-                                child: Text(transfList[index].dominio, style: textStyleDato)),
+                                child: Text(transfList[index].dominio,
+                                    style: textStyleDato)),
                           ],
                         ),
                         Row(
@@ -130,15 +145,16 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                             Container(
                                 alignment: Alignment.center,
                                 //height: 25,
-                                child: Text('Almacén:', style: textStyleTituto)),
+                                child:
+                                    Text('Almacén:', style: textStyleTituto)),
                             const SizedBox(width: 5),
                             Container(
                                 alignment: Alignment.center,
                                 //height: 25,
-                                child: Text(transfList[index].almOrig, style: textStyleDato)),
+                                child: Text(transfList[index].almOrig,
+                                    style: textStyleDato)),
                           ],
                         ),
-                        
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -150,10 +166,11 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
                                 //width: 100,
-                                child: Text('Artículo:', style: textStyleTituto)),
-                            const SizedBox(width: 5),    
+                                child:
+                                    Text('Artículo:', style: textStyleTituto)),
+                            const SizedBox(width: 5),
                             Container(
-                              //color: Colors.red,
+                                //color: Colors.red,
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
                                 width: 100,
@@ -168,7 +185,7 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                                 //height: 20,
                                 //width: 100,
                                 child: Text('Lote:', style: textStyleTituto)),
-                            const SizedBox(width: 5),    
+                            const SizedBox(width: 5),
                             Container(
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
@@ -188,10 +205,11 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
                                 //width: 100,
-                                child: Text('Ubicación:', style: textStyleTituto)),
-                            const SizedBox(width: 5),    
+                                child:
+                                    Text('Ubicación:', style: textStyleTituto)),
+                            const SizedBox(width: 5),
                             Container(
-                              //color: Colors.red,
+                                //color: Colors.red,
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
                                 width: 89,
@@ -205,8 +223,9 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
                                 //width: 100,
-                                child: Text('Referencia:', style: textStyleTituto)),
-                            const SizedBox(width: 5),    
+                                child: Text('Referencia:',
+                                    style: textStyleTituto)),
+                            const SizedBox(width: 5),
                             Container(
                                 alignment: Alignment.centerLeft,
                                 //height: 20,
@@ -225,7 +244,7 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                             //height: 20,
                             //width: 100,
                             child: Text('Cantidad:', style: textStyleTituto)),
-                        const SizedBox(width: 5),     
+                        const SizedBox(width: 5),
                         Container(
                             alignment: Alignment.centerLeft,
                             //height: 20,
@@ -234,8 +253,6 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                                 style: textStyleDato)),
                       ],
                     ),
-                    
-                    
                   ],
                 )),
           ),

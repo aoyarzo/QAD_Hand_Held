@@ -4,6 +4,7 @@ import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 class ArticuloRow extends StatelessWidget {
   final Color colorQAD;
   final TextFormField textFieldArticuloVerify;
+  //final bool? iconVerify;
 
   const ArticuloRow(
       {super.key,

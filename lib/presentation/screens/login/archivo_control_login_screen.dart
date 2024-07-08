@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class ArchivoControlLoginScreen extends ConsumerWidget {
   static const name = 'archivo-control-login-screen';
 
-  const ArchivoControlLoginScreen({super.key});
+  final _controllerDominio = TextEditingController();
+  final _controllerUrl = TextEditingController();
+
+  ArchivoControlLoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
+    _controllerDominio.text = Preferences.dominio;
+    _controllerUrl.text = Preferences.url;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -37,34 +43,36 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: UrlArchivoControl(
-                colorQAD: colorQAD, 
-                textFieldUrl: textFieldUrl()),
+                  colorQAD: colorQAD,
+                  textFieldUrl: textFieldUrl(_controllerUrl)),
             ),
             DominioArchivoControl(
-              colorQAD: colorQAD, 
-              textFieldDominio: textFieldDominioLogin()),
-            const SizedBox(height: 20),  
+                colorQAD: colorQAD,
+                textFieldDominio: textFieldDominioLogin(_controllerDominio)),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+                onPressed: () {
+                  Preferences.dominio = _controllerDominio.text;
+                  Preferences.url = _controllerUrl.text;
                 },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorQAD),
-              child: const Text('Guardar', 
-               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
-               )),
-
+                style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                child: const Text(
+                  'Guardar',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                )),
           ],
         ),
       ),
-
-      
     );
   }
 }
 
-TextFormField textFieldDominioLogin() {
+TextFormField textFieldDominioLogin(TextEditingController controllerDominio) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerDominio,
     //autocorrect: false,
     decoration: inputDecorationTextFormFieldArchivoControlLogin(),
     /*validator: (value) {
@@ -76,9 +84,9 @@ TextFormField textFieldDominioLogin() {
   );
 }
 
-TextFormField textFieldUrl() {
+TextFormField textFieldUrl(TextEditingController controllerUrl) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerUrl,
     //autocorrect: false,
     decoration: inputDecorationTextFormFieldArchivoControlLogin(),
     /*validator: (value) {
@@ -89,8 +97,6 @@ TextFormField textFieldUrl() {
     //onChanged: (value) => buscarTpago(value, dbProvider),
   );
 }
-
-
 
 InputDecoration inputDecorationTextFormFieldArchivoControlLogin() {
   return InputDecoration(

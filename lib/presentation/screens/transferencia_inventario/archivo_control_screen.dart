@@ -2,15 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class ArchivoControlScreen extends ConsumerWidget {
   static const name = 'archivo-control-screen';
 
-  const ArchivoControlScreen({super.key});
+  final _controllerDominio = TextEditingController();
+  final _controllerAlmacen = TextEditingController();
+  final _controllerUbicTrans = TextEditingController();
+
+  ArchivoControlScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
+
+    _controllerDominio.text = Preferences.dominio;
+    _controllerAlmacen.text = Preferences.almacen;
+    _controllerUbicTrans.text = Preferences.ubicTrans;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -34,38 +43,41 @@ class ArchivoControlScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            
             DominioArchivoControl(
-              colorQAD: colorQAD, 
-              textFieldDominio: textFieldDominio()),
+                colorQAD: colorQAD,
+                textFieldDominio: textFieldDominio(_controllerDominio)),
             AlmacenArchivoControl(
-              colorQAD: colorQAD, 
-              textFieldAlmacen: textFieldAlmacen()),
+                colorQAD: colorQAD,
+                textFieldAlmacen: textFieldAlmacen(_controllerAlmacen)),
             UbicacionTransitoArchivoControl(
-              colorQAD: colorQAD, 
-              textFieldUbicTransito: textFieldUbicTransito()),    
-            const SizedBox(height: 20),  
+                colorQAD: colorQAD,
+                textFieldUbicTransito:
+                    textFieldUbicTransito(_controllerUbicTrans)),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+                onPressed: () {
+                  Preferences.dominio = _controllerDominio.text;
+                  Preferences.almacen = _controllerAlmacen.text;
+                  Preferences.ubicTrans = _controllerUbicTrans.text;
                 },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorQAD),
-              child: const Text('Guardar', 
-               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
-               )),
-
+                style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                child: const Text(
+                  'Guardar',
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                )),
           ],
         ),
       ),
-
-      
     );
   }
 }
 
-TextFormField textFieldDominio() {
+TextFormField textFieldDominio(TextEditingController controllerDominio) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerDominio,
     //autocorrect: false,
     decoration: inputDecorationTextFormFieldArchivoControl(),
     /*validator: (value) {
@@ -77,9 +89,9 @@ TextFormField textFieldDominio() {
   );
 }
 
-TextFormField textFieldAlmacen() {
+TextFormField textFieldAlmacen(TextEditingController controllerAlmacen) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerAlmacen,
     //autocorrect: false,
     decoration: inputDecorationTextFormFieldArchivoControl(),
     /*validator: (value) {
@@ -91,9 +103,9 @@ TextFormField textFieldAlmacen() {
   );
 }
 
-TextFormField textFieldUbicTransito() {
+TextFormField textFieldUbicTransito(TextEditingController controllerUbicTrans) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerUbicTrans,
     //autocorrect: false,
     decoration: inputDecorationTextFormFieldArchivoControl(),
     /*validator: (value) {
