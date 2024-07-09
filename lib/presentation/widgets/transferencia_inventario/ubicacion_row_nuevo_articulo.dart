@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 
-class UbicacionRow extends StatelessWidget {
+
+class UbicacionRow extends ConsumerWidget {
   final Color colorQAD;
   final TextFormField textFieldUbicacionVerify;
+  final void Function()? iconButton;
 
   const UbicacionRow(
       {super.key,
       required this.colorQAD,
-      required this.textFieldUbicacionVerify});
+      required this.textFieldUbicacionVerify,
+      required this.iconButton});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final validateLoc = ref.watch(validateLocProvider);
+
     return Row(
       children: [
         Expanded(
@@ -38,15 +44,14 @@ class UbicacionRow extends StatelessWidget {
         Expanded(
           flex: 1,
           child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.check_circle_outline,
-                color: Colors.red,
+                color: validateLoc ? Colors.green : Colors.red,
               ),
               iconSize: 35,
               color: colorQAD,
-              onPressed: () async {
-                await GetLocApiDatasource().validateLoc();
-              }),
+              onPressed: iconButton
+              ),
         ),
       ],
     );

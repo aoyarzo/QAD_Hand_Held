@@ -73,7 +73,7 @@ class LoginScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 10),
                           child: IconButton(
                               onPressed: () {
-                                context.go('/archivo-control-login');
+                                context.go('/archivo-control');
                               },
                               icon: Icon(
                                 Icons.settings_outlined,

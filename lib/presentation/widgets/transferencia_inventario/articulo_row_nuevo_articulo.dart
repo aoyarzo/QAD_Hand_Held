@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 
 class ArticuloRow extends StatelessWidget {
   final Color colorQAD;
   final TextFormField textFieldArticuloVerify;
-  //final bool? iconVerify;
+  final void Function()? iconButton;
 
   const ArticuloRow(
       {super.key,
       required this.colorQAD,
-      required this.textFieldArticuloVerify});
+      required this.textFieldArticuloVerify,
+      required this.iconButton});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -45,11 +45,11 @@ class ArticuloRow extends StatelessWidget {
               ),
               iconSize: 35,
               color: colorQAD,
-              onPressed: () async {
-                await GetPartApiDatasource().validatePart();
-              }),
+              onPressed: iconButton
+              ),
         ),
       ],
     );
   }
 }
+//await GetPartApiDatasource().validatePart();

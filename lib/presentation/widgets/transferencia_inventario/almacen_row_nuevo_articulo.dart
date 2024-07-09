@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+//import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 
 class AlmacenRow extends StatelessWidget {
   final Color colorQAD;
@@ -29,25 +29,14 @@ class AlmacenRow extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Container(
+            padding: EdgeInsets.only(right: 10),
             //color: Colors.blue,
             height: 50,
             alignment: Alignment.center,
             child: textFieldAlmacenVerify,
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: IconButton(
-              icon: const Icon(
-                Icons.check_circle_outline,
-                color: Colors.red,
-              ),
-              iconSize: 35,
-              color: colorQAD,
-              onPressed: () async {
-                await GetSiteApiDatasource().validateSite();
-              }),
-        ),
+        
       ],
     );
   }

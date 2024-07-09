@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
+import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+import 'package:qad_hand_held/presentation/providers/validate_provider.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class TransferenciaOrigenScreen extends ConsumerWidget {
   static const name = 'trans-origen-screen';
 
   final _controllerArticulo = TextEditingController();
+  final _controllerAlmacen = TextEditingController();
   final _controllerUbiOrig = TextEditingController();
   final _controllerLoteOrig = TextEditingController();
   final _controllerRefOrig = TextEditingController();
@@ -18,6 +21,10 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
+
+    _controllerAlmacen.text = Preferences.almacen;
+    final validateLoc = ref.watch(validateLocProvider);
+    final validatePart = ref.watch(validatePartProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -41,36 +48,71 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ArticuloRow(
-                colorQAD: colorQAD,
-                textFieldArticuloVerify:
-                    textFieldArticuloVerify(_controllerArticulo)),
             AlmacenRow(
                 colorQAD: colorQAD,
-                textFieldAlmacenVerify: textFieldAlmacenVerify()),
+                textFieldAlmacenVerify:
+                    textFieldAlmacenVerify(_controllerAlmacen)),
             UbicacionRow(
                 colorQAD: colorQAD,
                 textFieldUbicacionVerify:
-                    textFieldUbicacionVerify(_controllerUbiOrig)),
+                    textFieldUbicacionVerify(_controllerUbiOrig),
+                iconButton: () async {
+
+                  final descLoc = await GetLocApiDatasource().validateLoc(
+                      Preferences.dominio,
+                      Preferences.almacen,
+                      _controllerUbiOrig.text);
+
+                  ref.read(validateLocProvider.notifier).state =
+                      descLoc.isEmpty ? false : true;
+                  print(validateLoc);
+
+                }),
+            validateLoc
+                ? ArticuloRow(
+                    colorQAD: colorQAD,
+                    textFieldArticuloVerify:
+                        textFieldArticuloVerify(_controllerArticulo),
+                    iconButton: () async {
+
+                      final descPart = await GetPartApiDatasource()
+                          .validatePart(
+                              Preferences.dominio, _controllerArticulo.text);
+
+                      ref.read(validatePartProvider.notifier).state =
+                          descPart.isEmpty ? false : true;
+                      print(validatePart);
+
+                    })
+                : Container(),
+            validatePart 
+            ?
             LoteRow(
                 colorQAD: colorQAD,
-                textFieldLoteOrigen: textFieldLoteOrigen(_controllerLoteOrig)),
+                textFieldLoteOrigen: textFieldLoteOrigen(_controllerLoteOrig))
+            : Container(),
+            validatePart ?
             ReferenciaRow(
                 colorQAD: colorQAD,
                 textFieldReferenciaOrigen:
-                    textFieldReferenciaOrigen(_controllerRefOrig)),
+                    textFieldReferenciaOrigen(_controllerRefOrig))
+            : Container(),
+            validatePart ?
             CantidadRow(
                 colorQAD: colorQAD,
-                textFieldCantidad: textFieldCantidad(_controllerCantidad)),
+                textFieldCantidad: textFieldCantidad(_controllerCantidad))
+            : Container(),
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () {
-                  ref.read(transfChangeNotifierProvider.notifier).addTransf(
+                  /*ref.read(transfChangeNotifierProvider.notifier).addTransf(
                       _controllerArticulo.text,
                       _controllerUbiOrig.text,
                       _controllerLoteOrig.text,
                       _controllerRefOrig.text,
                       int.parse(_controllerCantidad.text));
+
+                  context.go('/transf-inv');*/
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                 child: const Text(
@@ -102,9 +144,10 @@ TextFormField textFieldArticuloVerify(
   );
 }
 
-TextFormField textFieldAlmacenVerify() {
+TextFormField textFieldAlmacenVerify(TextEditingController controllerAlmacen) {
   return TextFormField(
-    //controller: _controllerAlmacen,
+    controller: controllerAlmacen,
+    readOnly: true,
     //autocorrect: false,
     decoration: inputDecorationTextFormField(),
     /*validator: (value) {
@@ -159,7 +202,6 @@ TextFormField textFieldReferenciaOrigen(
     //onChanged: (value) => buscarTpago(value, dbProvider),
   );
 }
-
 
 TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
   return TextFormField(

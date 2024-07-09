@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
-import 'package:qad_hand_held/presentation/screens/screens.dart';
+//import 'package:qad_hand_held/presentation/screens/screens.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 
 class TransferenciaInventarioScreen extends ConsumerWidget {
@@ -83,7 +83,7 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
 
         return GestureDetector(
           onTap: () {
-            Navigator.push(
+            /*Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
@@ -93,7 +93,7 @@ ListView Lista_Articulos(TransfChangeNotifier transf) {
                             transfList[index].ubiOrig, 
                             transfList[index].lotOrig, 
                             transfList[index].refOrig, 
-                            transfList[index].cantidad)));
+                            transfList[index].cantidad)));*/
           },
           child: Padding(
             padding: const EdgeInsets.all(3),

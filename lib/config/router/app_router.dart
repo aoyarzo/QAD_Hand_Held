@@ -27,15 +27,9 @@ final appRouter = GoRouter(
       name: TransferenciaDestinoScreen.name,
       builder: (context, state) => TransferenciaDestinoScreen(),
       ),  */
-
+   
     GoRoute(
       path: '/archivo-control',
-      name: ArchivoControlScreen.name,
-      builder: (context, state) => ArchivoControlScreen(),
-      ),
-    
-    GoRoute(
-      path: '/archivo-control-login',
       name: ArchivoControlLoginScreen.name,
       builder: (context, state) => ArchivoControlLoginScreen(),
       ),         
