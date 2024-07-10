@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
-import 'package:qad_hand_held/presentation/providers/validate_provider.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
@@ -25,6 +25,7 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
     _controllerAlmacen.text = Preferences.almacen;
     final validateLoc = ref.watch(validateLocProvider);
     final validatePart = ref.watch(validatePartProvider);
+    final transf = ref.watch(transfChangeNotifierProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -57,7 +58,6 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                 textFieldUbicacionVerify:
                     textFieldUbicacionVerify(_controllerUbiOrig),
                 iconButton: () async {
-
                   final descLoc = await GetLocApiDatasource().validateLoc(
                       Preferences.dominio,
                       Preferences.almacen,
@@ -66,7 +66,8 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                   ref.read(validateLocProvider.notifier).state =
                       descLoc.isEmpty ? false : true;
                   print(validateLoc);
-
+                  //ref.read(validateLocProvider.notifier).state = true;
+                  //ref.read(validatePartProvider.notifier).state = true;
                 }),
             validateLoc
                 ? ArticuloRow(
@@ -74,7 +75,6 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                     textFieldArticuloVerify:
                         textFieldArticuloVerify(_controllerArticulo),
                     iconButton: () async {
-
                       final descPart = await GetPartApiDatasource()
                           .validatePart(
                               Preferences.dominio, _controllerArticulo.text);
@@ -82,37 +82,60 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                       ref.read(validatePartProvider.notifier).state =
                           descPart.isEmpty ? false : true;
                       print(validatePart);
-
                     })
                 : Container(),
-            validatePart 
-            ?
-            LoteRow(
-                colorQAD: colorQAD,
-                textFieldLoteOrigen: textFieldLoteOrigen(_controllerLoteOrig))
-            : Container(),
-            validatePart ?
-            ReferenciaRow(
-                colorQAD: colorQAD,
-                textFieldReferenciaOrigen:
-                    textFieldReferenciaOrigen(_controllerRefOrig))
-            : Container(),
-            validatePart ?
-            CantidadRow(
-                colorQAD: colorQAD,
-                textFieldCantidad: textFieldCantidad(_controllerCantidad))
-            : Container(),
+            validatePart
+                ? LoteRow(
+                    colorQAD: colorQAD,
+                    textFieldLoteOrigen:
+                        textFieldLoteOrigen(_controllerLoteOrig))
+                : Container(),
+            validatePart
+                ? ReferenciaRow(
+                    colorQAD: colorQAD,
+                    textFieldReferenciaOrigen:
+                        textFieldReferenciaOrigen(_controllerRefOrig))
+                : Container(),
+            validatePart
+                ? CantidadRow(
+                    colorQAD: colorQAD,
+                    textFieldCantidad: textFieldCantidad(_controllerCantidad))
+                : Container(),
             const SizedBox(height: 10),
             ElevatedButton(
-                onPressed: () {
-                  /*ref.read(transfChangeNotifierProvider.notifier).addTransf(
+                onPressed: () async {
+
+                  //Guarda en Provider
+                  ref.read(transfChangeNotifierProvider.notifier).addTransf(
+                      transf.transf.length + 1,
                       _controllerArticulo.text,
                       _controllerUbiOrig.text,
                       _controllerLoteOrig.text,
                       _controllerRefOrig.text,
+                      Preferences.ubicTrans,
                       int.parse(_controllerCantidad.text));
 
-                  context.go('/transf-inv');*/
+                  //Valida Cantidad
+                  final mensajeResponse = await TransferenciaApiDatasource()
+                      .transferencia(
+                          Preferences.dominio,
+                          _controllerArticulo.text,
+                          Preferences.almacen,
+                          _controllerUbiOrig.text,
+                          _controllerLoteOrig.text,
+                          Preferences.almacen,
+                          Preferences.ubicTrans,
+                          _controllerRefOrig.text,
+                          int.parse(_controllerCantidad.text),
+                          Preferences.usuario);
+
+                  print(mensajeResponse);
+
+                  ref.read(validatePartProvider.notifier).state = false;
+                  ref.read(validateLocProvider.notifier).state = false;
+
+                  context.go('/transf-inv');
+                  
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                 child: const Text(

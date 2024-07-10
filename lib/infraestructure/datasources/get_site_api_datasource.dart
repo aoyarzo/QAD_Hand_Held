@@ -1,32 +1,29 @@
 import 'package:dio/dio.dart';
+import 'package:qad_hand_held/domain/entities/almacen_model.dart';
 
 class GetSiteApiDatasource {
   final dio = Dio();
 
   String url = 'https://aramark-pilo.qad.cl/apierp/apigetsite';
 
-  Future<void> validateSite() async {
+  Future<String> validateSite( String dominio, String almacen) async {
     final response = await dio.post(
       url,
       data: {"dsRequest": {
   "Almacen": [
     {
-      "Domain": "Aramark",
-      "Almacen": "Alpes",
-      "Descripcion": ""
-    },
-    {
-      "Domain": "Aramark",
-      "Almacen": "Alpes",
+      "Domain": "$dominio",
+      "Almacen": "$almacen",
       "Descripcion": ""
     }
   ]
-}},
+}}
     );
 
-    //final validateSiteResponse = ArticuloModel.fromJson(response.data);
+    final validateSiteResponse = AlmacenModel.fromJson(response.data);
 
-    print(response.data);
+    //print(response.data);
 
+    return validateSiteResponse.almacen[0].descripcion;
   }
 }

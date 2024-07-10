@@ -7,8 +7,7 @@ class Preferences {
   static String _url = '';
   static String _almacen = '';
   static String _ubicTrans = '';
-  
-  
+  static String _usuario = '';
 
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -50,5 +49,12 @@ class Preferences {
     _prefs.setString('ubicTrans', ubicTrans);
   }
 
-  
+  static String get usuario {
+    return _prefs.getString('usuario') ?? _usuario;
+  }
+
+  static set usuario(String usuario) {
+    _usuario = usuario;
+    _prefs.setString('usuario', usuario);
+  }
 }

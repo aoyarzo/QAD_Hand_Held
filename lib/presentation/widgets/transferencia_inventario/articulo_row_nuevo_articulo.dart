@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 
-class ArticuloRow extends StatelessWidget {
+class ArticuloRow extends ConsumerWidget {
   final Color colorQAD;
   final TextFormField textFieldArticuloVerify;
   final void Function()? iconButton;
@@ -11,7 +13,10 @@ class ArticuloRow extends StatelessWidget {
       required this.textFieldArticuloVerify,
       required this.iconButton});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final validatePart = ref.watch(validatePartProvider);
+
     return Row(
       children: [
         Expanded(
@@ -39,9 +44,9 @@ class ArticuloRow extends StatelessWidget {
         Expanded(
           flex: 1,
           child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.check_circle_outline,
-                color: Colors.red,
+                color: validatePart ? Colors.green : Colors.red,
               ),
               iconSize: 35,
               color: colorQAD,

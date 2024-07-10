@@ -62,7 +62,7 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                //context.push('/');
+                context.go('/transf-inv');
               },
               title: const Text('Transf. Inventario',
                   style: TextStyle(fontSize: 14)),
@@ -102,7 +102,7 @@ class DrawerMenuWidget extends StatelessWidget {
                 color: colorQAD,
               ),
             ),
-            ListTile(
+           /* ListTile(
               onTap: () {
                 context.go('/archivo-control');
               },
@@ -112,7 +112,7 @@ class DrawerMenuWidget extends StatelessWidget {
                 Icons.settings_applications,
                 color: colorQAD,
               ),
-            ),
+            ),*/
             ListTile(
               onTap: () {},
               title:

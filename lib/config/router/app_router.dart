@@ -7,13 +7,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/login',
       name: LoginScreen.name,
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => LoginScreen(),
       ),
       
     GoRoute(
       path: '/transf-inv',
       name: TransferenciaInventarioScreen.name,
-      builder: (context, state) => const TransferenciaInventarioScreen(),
+      builder: (context, state) => TransferenciaInventarioScreen(),
       ),
 
     GoRoute(

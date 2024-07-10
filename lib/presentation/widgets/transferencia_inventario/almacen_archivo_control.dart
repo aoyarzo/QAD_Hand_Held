@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 
-class AlmacenArchivoControl extends StatelessWidget {
+class AlmacenArchivoControl extends ConsumerWidget {
   final Color colorQAD;
   final TextFormField textFieldAlmacen;
+  final void Function()? iconButton;
 
-  const AlmacenArchivoControl({super.key, required this.colorQAD, required this.textFieldAlmacen});
+  const AlmacenArchivoControl({
+    super.key, 
+    required this.colorQAD, 
+    required this.textFieldAlmacen,
+    required this.iconButton});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final validateSite = ref.watch(validateSiteProvider);
+
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Row(
@@ -33,17 +44,17 @@ class AlmacenArchivoControl extends StatelessWidget {
               child: textFieldAlmacen,
             ),
           ),
-          /*Expanded(
+          Expanded(
             flex: 1,
             child: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.check_circle_outline,
-                  color: Colors.red,
+                  color: validateSite ? Colors.green : Colors.red,
                 ),
                 iconSize: 35,
                 color: colorQAD,
-                onPressed: () {}),
-          ),*/
+                onPressed: iconButton),
+          ),
         ],
       ),
     );

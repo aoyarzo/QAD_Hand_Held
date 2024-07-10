@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   static const name = 'login-screen';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  final _controllerUsuario = TextEditingController();
+
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +95,7 @@ class LoginScreen extends StatelessWidget {
                               padding:
                                   const EdgeInsets.only(left: 30, right: 30),
                               child: TextField(
+                                controller: _controllerUsuario,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.person_outline,
                                       color: colorQAD),
@@ -137,7 +141,10 @@ class LoginScreen extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                               onPressed: () {
+
+                                Preferences.usuario = _controllerUsuario.text;
                                 context.go('/transf-inv');
+                                
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: colorQAD),

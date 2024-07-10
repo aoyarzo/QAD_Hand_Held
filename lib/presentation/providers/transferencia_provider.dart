@@ -11,24 +11,32 @@ final transfChangeNotifierProvider =
 class TransfChangeNotifier extends ChangeNotifier {
   List<TransferenciaModel> transf = [];
 
-  void addTransf(String articulo, String ubiOrig, String lotOrig, String refOrig, int cantidad)  {
+  void addTransf(int linea, String articulo, String ubiOrig, String lotOrig,
+      String refOrig, String ubicDest, int cantidad) {
     transf = [
       ...transf,
       TransferenciaModel(
-                dominio: Preferences.dominio,
-                articulo: articulo,
-                almOrig: Preferences.almacen,
-                ubiOrig: ubiOrig,
-                lotOrig: lotOrig,
-                refOrig: refOrig,
-                almDest: '',
-                ubiDest: '',
-                lotDest: '',
-                refDes: refOrig,
-                cantidad: cantidad),
+          linea: linea,
+          dominio: Preferences.dominio,
+          articulo: articulo,
+          almOrig: Preferences.almacen,
+          ubiOrig: ubiOrig,
+          lotOrig: lotOrig,
+          refOrig: refOrig,
+          almDest: Preferences.almacen,
+          ubiDest: ubicDest,
+          lotDest: lotOrig,
+          refDes: refOrig,
+          cantidad: cantidad,
+          usuario: 'User001'),
     ];
     notifyListeners();
   }
 
- 
+  void removeTransf(int index) {
+
+    transf.removeWhere((item) => item.linea == index);
+    notifyListeners();
+    
+  }
 }

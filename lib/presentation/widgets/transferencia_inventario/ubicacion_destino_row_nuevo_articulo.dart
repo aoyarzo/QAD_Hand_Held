@@ -9,29 +9,15 @@ class UbicacionDestinoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              //color: Colors.green,
-              child: const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text('Ubicación Destino:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              //color: Colors.blue,
-              height: 50,
-              alignment: Alignment.center,
-              child: textFieldUbicacionDestino,
-            ),
+          const Text('Ubicación Destino:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          Container(
+            //color: Colors.blue,
+            height: 50,
+            alignment: Alignment.center,
+            child: textFieldUbicacionDestino,
           ),
           /*Expanded(
             flex: 1,

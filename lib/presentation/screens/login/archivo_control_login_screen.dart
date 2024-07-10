@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
@@ -55,7 +57,16 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
                 textFieldDominio: textFieldDominioLogin(_controllerDominio)),
             AlmacenArchivoControl(
                 colorQAD: colorQAD,
-                textFieldAlmacen: textFieldAlmacen(_controllerAlmacen)),
+                textFieldAlmacen: textFieldAlmacen(_controllerAlmacen),
+                iconButton: () async {
+                  final descSite = await GetSiteApiDatasource()
+                      .validateSite(
+                          Preferences.dominio, _controllerAlmacen.text);
+
+                  ref.read(validateSiteProvider.notifier).state =
+                      descSite.isEmpty ? false : true;
+                  print(descSite);
+                }),
             UbicacionTransitoArchivoControl(
                 colorQAD: colorQAD,
                 textFieldUbicTransito:
