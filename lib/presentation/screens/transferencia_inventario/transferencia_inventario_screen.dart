@@ -100,7 +100,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                       Container(
                           alignment: Alignment.center,
                           //height: 25,
-                          child: Text(Preferences.ubicTrans, style: textStyleDato)),
+                          child: Text(Preferences.ubicTrans,
+                              style: textStyleDato)),
                     ],
                   ),
                 ],
@@ -127,7 +128,7 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                 colorQAD,
                 textFieldAlmacenDestino(_controllerAlmacen),
                 textFieldUbicacionDestino(_controllerUbicacion),
-                transf,
+                ref,
                 _controllerAlmacen,
                 _controllerUbicacion);
           }),
@@ -354,9 +355,11 @@ Future<String?> _showDialogConfirmar(
     Color colorQAD,
     TextFormField textFieldAlmacenDestino,
     TextFormField textFieldUbicacionDestino,
-    TransfChangeNotifier transf,
+    WidgetRef ref,
     TextEditingController _controllerAlmacen,
     TextEditingController _controllerUbicacion) async {
+  final transf = ref.watch(transfChangeNotifierProvider);
+  _controllerAlmacen.text = Preferences.almacen;
   return showDialog<String>(
       barrierDismissible: false,
       context: context,
@@ -385,22 +388,23 @@ Future<String?> _showDialogConfirmar(
                       const SizedBox(height: 30),
                       ElevatedButton(
                           onPressed: () async {
-                            
                             for (int i = 0; i < transf.transf.length; i++) {
-                                  await TransferenciaApiDatasource()
-                                      .transferencia(
-                                          transf.transf[i].dominio,
-                                          transf.transf[i].articulo,
-                                          transf.transf[i].almOrig,
-                                          Preferences.ubicTrans,
-                                          transf.transf[i].lotOrig,
-                                          _controllerAlmacen.text,
-                                          _controllerUbicacion.text,
-                                          transf.transf[i].refOrig,
-                                          transf.transf[i].cantidad,
-                                          transf.transf[i].usuario);
+                              await TransferenciaApiDatasource().transferencia(
+                                  transf.transf[i].dominio,
+                                  transf.transf[i].articulo,
+                                  transf.transf[i].almOrig,
+                                  Preferences.ubicTrans,
+                                  transf.transf[i].lotOrig,
+                                  _controllerAlmacen.text,
+                                  _controllerUbicacion.text,
+                                  transf.transf[i].refOrig,
+                                  transf.transf[i].cantidad,
+                                  transf.transf[i].usuario);
                             }
 
+                            ref
+                                .read(transfChangeNotifierProvider.notifier)
+                                .clearTransf();
                             Navigator.pop(context);
 
                             //context.go('/transf-inv');

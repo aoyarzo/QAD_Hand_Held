@@ -34,9 +34,12 @@ class TransfChangeNotifier extends ChangeNotifier {
   }
 
   void removeTransf(int index) {
-
     transf.removeWhere((item) => item.linea == index);
     notifyListeners();
-    
+  }
+
+  void clearTransf() {
+    transf.clear();
+    notifyListeners();
   }
 }
