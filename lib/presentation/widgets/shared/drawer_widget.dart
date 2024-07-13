@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class DrawerMenuWidget extends StatelessWidget {
   @override
@@ -28,8 +29,14 @@ class DrawerMenuWidget extends StatelessWidget {
                         Icon(Icons.person_pin_rounded, color: colorQAD),
                         const SizedBox(width: 10),
                         Text(
-                          'Usuario',
+                          'Usuario: ',
                           style: TextStyle(fontSize: 15, color: colorQAD),
+                          maxLines: 1,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          Preferences.usuario,
+                          style: const TextStyle(fontSize: 14),
                           maxLines: 1,
                         ),
                       ],
@@ -44,6 +51,12 @@ class DrawerMenuWidget extends StatelessWidget {
                         Text(
                           'Dominio:',
                           style: TextStyle(fontSize: 15, color: colorQAD),
+                          maxLines: 1,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          Preferences.dominio,
+                          style: const TextStyle(fontSize: 14),
                           maxLines: 1,
                         ),
                       ],

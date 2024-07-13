@@ -19,17 +19,15 @@ class UbicacionRow extends ConsumerWidget {
 
     return Row(
       children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            height: 60,
-            alignment: Alignment.centerLeft,
-            //color: Colors.green,
-            child: const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text('Ubicación Origen:',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            ),
+        Container(
+          height: 60,
+          width: 100,
+          alignment: Alignment.centerLeft,
+          //color: Colors.green,
+          child: const Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Text('Ubicación Origen:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           ),
         ),
         Expanded(

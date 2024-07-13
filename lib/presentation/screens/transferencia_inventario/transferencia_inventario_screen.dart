@@ -3,22 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
-//import 'package:qad_hand_held/presentation/screens/screens.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 class TransferenciaInventarioScreen extends ConsumerWidget {
   static const name = 'transf-inv-screen';
-  final _controllerAlmacen = TextEditingController();
-  final _controllerUbicacion = TextEditingController();
+  final _controllerAlmacenDestino = TextEditingController();
+  final _controllerUbicacionDestino = TextEditingController();
 
   TransferenciaInventarioScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
-    var textStyleTituto = const TextStyle(
-        color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600);
+    var textStyleTituto = const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600);
     var textStyleDato = const TextStyle(color: Colors.black87, fontSize: 12);
 
     final transf = ref.watch(transfChangeNotifierProvider);
@@ -126,11 +124,11 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                 context,
                 textStyleTituto,
                 colorQAD,
-                textFieldAlmacenDestino(_controllerAlmacen),
-                textFieldUbicacionDestino(_controllerUbicacion),
+                textFieldAlmacenDestino(_controllerAlmacenDestino),
+                textFieldUbicacionDestino(_controllerUbicacionDestino),
                 ref,
-                _controllerAlmacen,
-                _controllerUbicacion);
+                _controllerAlmacenDestino,
+                _controllerUbicacionDestino);
           }),
     );
   }
@@ -372,7 +370,7 @@ Future<String?> _showDialogConfirmar(
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w500))),
             content: SingleChildScrollView(
               child: SizedBox(
-                height: 300,
+                height: 350,
                 //width: 600,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20),
@@ -418,6 +416,23 @@ Future<String?> _showDialogConfirmar(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
+                      
+                      const SizedBox(height: 10),    
+                      ElevatedButton(
+                          onPressed: () async {
+                            
+                            Navigator.pop(context);
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: colorQAD),
+                          child: const Text(
+                            ' Cancelar ',
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          )),    
                     ],
                   ),
                 ),
@@ -428,12 +443,12 @@ Future<String?> _showDialogConfirmar(
       });
 }
 
-TextFormField textFieldAlmacenDestino(TextEditingController controllerAlmacen) {
+TextFormField textFieldAlmacenDestino(TextEditingController controllerAlmacenDestino) {
   return TextFormField(
-    controller: controllerAlmacen,
+    controller: controllerAlmacenDestino,
     //readOnly: true,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldaa(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -443,13 +458,12 @@ TextFormField textFieldAlmacenDestino(TextEditingController controllerAlmacen) {
   );
 }
 
-TextFormField textFieldUbicacionDestino(
-    TextEditingController controllerUbicacion) {
+TextFormField textFieldUbicacionDestino(TextEditingController controllerUbicacionDestino) {
   return TextFormField(
-    controller: controllerUbicacion,
+    controller: controllerUbicacionDestino,
     //readOnly: true,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldaa(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -459,20 +473,4 @@ TextFormField textFieldUbicacionDestino(
   );
 }
 
-InputDecoration inputDecorationTextFormFieldaa() {
-  return InputDecoration(
-    enabledBorder: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    fillColor: Colors.grey[300],
-    //labelText: 'Almacen',
-    labelStyle: const TextStyle(
-      color: Colors.grey,
-    ),
-    border: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
-}
+

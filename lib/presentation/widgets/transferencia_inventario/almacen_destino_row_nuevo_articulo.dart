@@ -11,7 +11,7 @@ class AlmacenDestinoRow extends StatelessWidget {
       padding: const EdgeInsets.only(right: 10),
       child: Column(
         children: [
-          Text('Almacen Destino:',
+          const Text('Almacén Destino:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           Container(
             //color: Colors.blue,
@@ -19,17 +19,6 @@ class AlmacenDestinoRow extends StatelessWidget {
             alignment: Alignment.center,
             child: textFieldAlmacenDestino,
           ),
-          /*Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: const Icon(
-                  Icons.check_circle_outline,
-                  color: Colors.red,
-                ),
-                iconSize: 35,
-                color: colorQAD,
-                onPressed: () {}),
-          ),*/
         ],
       ),
     );

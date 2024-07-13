@@ -19,17 +19,6 @@ class UbicacionDestinoRow extends StatelessWidget {
             alignment: Alignment.center,
             child: textFieldUbicacionDestino,
           ),
-          /*Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: const Icon(
-                  Icons.check_circle_outline,
-                  color: Colors.red,
-                ),
-                iconSize: 35,
-                color: colorQAD,
-                onPressed: () {}),
-          ),*/
         ],
       ),
     );

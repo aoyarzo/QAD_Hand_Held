@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
@@ -52,7 +53,7 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
             AlmacenRow(
                 colorQAD: colorQAD,
                 textFieldAlmacenVerify:
-                    textFieldAlmacenVerify(_controllerAlmacen)),
+                    textFieldAlmacenOrigen(_controllerAlmacen)),
             UbicacionRow(
                 colorQAD: colorQAD,
                 textFieldUbicacionVerify:
@@ -152,27 +153,13 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
   }
 }
 
-TextFormField textFieldArticuloVerify(
-    TextEditingController controllerArticulo) {
-  return TextFormField(
-    controller: controllerArticulo,
-    //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
-    /*validator: (value) {
-        return (value != null && value.length < 9 && value.length > 0)
-            ? null
-            : 'Campo Vacío / Máx. 8 Caracteres';
-      },*/
-    //onChanged: (value) => buscarTpago(value, dbProvider),
-  );
-}
 
-TextFormField textFieldAlmacenVerify(TextEditingController controllerAlmacen) {
+TextFormField textFieldAlmacenOrigen(TextEditingController controllerAlmacen) {
   return TextFormField(
     controller: controllerAlmacen,
     readOnly: true,
     //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
+    decoration: inputDecorationTextFormField()
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -186,6 +173,21 @@ TextFormField textFieldUbicacionVerify(
     TextEditingController controllerUbicOrig) {
   return TextFormField(
     controller: controllerUbicOrig,
+    //autocorrect: false,
+    decoration: inputDecorationTextFormField(),
+    /*validator: (value) {
+        return (value != null && value.length < 9 && value.length > 0)
+            ? null
+            : 'Campo Vacío / Máx. 8 Caracteres';
+      },*/
+    //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+TextFormField textFieldArticuloVerify(
+    TextEditingController controllerArticulo) {
+  return TextFormField(
+    controller: controllerArticulo,
     //autocorrect: false,
     decoration: inputDecorationTextFormField(),
     /*validator: (value) {
@@ -230,6 +232,9 @@ TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
   return TextFormField(
     controller: controllerCantidad,
     keyboardType: const TextInputType.numberWithOptions(),
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+    ],
     //autocorrect: false,
     decoration: inputDecorationTextFormField(),
     /*validator: (value) {
@@ -241,20 +246,3 @@ TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
   );
 }
 
-InputDecoration inputDecorationTextFormField() {
-  return InputDecoration(
-    enabledBorder: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    fillColor: Colors.grey[300],
-    //labelText: 'Almacen',
-    labelStyle: const TextStyle(
-      color: Colors.grey,
-    ),
-    border: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
-}

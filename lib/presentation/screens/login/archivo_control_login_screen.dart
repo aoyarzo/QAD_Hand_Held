@@ -54,7 +54,7 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
             ),
             DominioArchivoControl(
                 colorQAD: colorQAD,
-                textFieldDominio: textFieldDominioLogin(_controllerDominio)),
+                textFieldDominio: textFieldDominio(_controllerDominio)),
             AlmacenArchivoControl(
                 colorQAD: colorQAD,
                 textFieldAlmacen: textFieldAlmacen(_controllerAlmacen),
@@ -94,11 +94,11 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
   }
 }
 
-TextFormField textFieldDominioLogin(TextEditingController controllerDominio) {
+TextFormField textFieldDominio(TextEditingController controllerDominio) {
   return TextFormField(
     controller: controllerDominio,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldArchivoControl(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -112,7 +112,7 @@ TextFormField textFieldUrl(TextEditingController controllerUrl) {
   return TextFormField(
     controller: controllerUrl,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldArchivoControl(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -122,25 +122,12 @@ TextFormField textFieldUrl(TextEditingController controllerUrl) {
   );
 }
 
-TextFormField textFieldDominio(TextEditingController controllerDominio) {
-  return TextFormField(
-    controller: controllerDominio,
-    //autocorrect: false,
-    decoration: inputDecorationTextFormFieldArchivoControl(),
-    /*validator: (value) {
-        return (value != null && value.length < 9 && value.length > 0)
-            ? null
-            : 'Campo Vacío / Máx. 8 Caracteres';
-      },*/
-    //onChanged: (value) => buscarTpago(value, dbProvider),
-  );
-}
 
 TextFormField textFieldAlmacen(TextEditingController controllerAlmacen) {
   return TextFormField(
     controller: controllerAlmacen,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldArchivoControl(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
@@ -154,30 +141,12 @@ TextFormField textFieldUbicTransito(TextEditingController controllerUbicTrans) {
   return TextFormField(
     controller: controllerUbicTrans,
     //autocorrect: false,
-    decoration: inputDecorationTextFormFieldArchivoControl(),
+    decoration: inputDecorationTextFormField(),
     /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
     //onChanged: (value) => buscarTpago(value, dbProvider),
-  );
-}
-
-InputDecoration inputDecorationTextFormFieldArchivoControl() {
-  return InputDecoration(
-    enabledBorder: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    fillColor: Colors.grey[300],
-    //labelText: 'Almacen',
-    labelStyle: const TextStyle(
-      color: Colors.grey,
-    ),
-    border: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.black38, width: 2),
-      borderRadius: BorderRadius.circular(10),
-    ),
   );
 }
