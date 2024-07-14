@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qad_hand_held/domain/entities/transferencia_model.dart';
+import 'package:qad_hand_held/domain/entities/transferencia_inventario/transferencia_model.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 final transfChangeNotifierProvider =

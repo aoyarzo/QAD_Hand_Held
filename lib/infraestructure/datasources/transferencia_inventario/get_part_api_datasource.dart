@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:qad_hand_held/domain/entities/articulos_model.dart';
+import 'package:qad_hand_held/domain/entities/transferencia_inventario/articulos_model.dart';
 
 class GetPartApiDatasource {
   final dio = Dio();

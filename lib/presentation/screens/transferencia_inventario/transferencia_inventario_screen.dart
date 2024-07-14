@@ -58,22 +58,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                          alignment: Alignment.center,
-                          //height: 25,
-                          child: Text('Dominio:', style: textStyleTituto)),
-                      const SizedBox(width: 2),
-                      Container(
-                          alignment: Alignment.center,
-                          //height: 25,
-                          child:
-                              Text(Preferences.dominio, style: textStyleDato)),
-                    ],
-                  ),
                   Row(
                     children: [
                       Container(

@@ -66,7 +66,9 @@ class DrawerMenuWidget extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                context.go('/recepcion-oc');
+              },
               title: const Text('Recepción OC', style: TextStyle(fontSize: 14)),
               leading: Icon(
                 Icons.receipt_long_outlined,

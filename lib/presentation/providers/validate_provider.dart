@@ -15,3 +15,11 @@ final validateSiteProvider = StateProvider<bool>((ref) {
 final transfProvider = StateProvider<String>((ref) {
   return '';
 });
+
+final validateOrdenProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final validateDetOCProvider = StateProvider<bool>((ref) {
+  return false;
+});

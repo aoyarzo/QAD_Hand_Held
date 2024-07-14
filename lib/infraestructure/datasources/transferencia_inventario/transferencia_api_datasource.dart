@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:qad_hand_held/domain/entities/transf_response_model.dart';
+import 'package:qad_hand_held/domain/entities/models.dart';
 
 class TransferenciaApiDatasource {
   final dio = Dio();

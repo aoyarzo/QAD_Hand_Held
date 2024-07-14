@@ -21,18 +21,18 @@ final appRouter = GoRouter(
       name: TransferenciaOrigenScreen.name,
       builder: (context, state) => TransferenciaOrigenScreen(),
       ),
-
-    /*GoRoute(
-      path: '/trans-destino',
-      name: TransferenciaDestinoScreen.name,
-      builder: (context, state) => TransferenciaDestinoScreen(),
-      ),  */
    
     GoRoute(
       path: '/archivo-control',
       name: ArchivoControlLoginScreen.name,
       builder: (context, state) => ArchivoControlLoginScreen(),
-      ),         
+      ),
+
+    GoRoute(
+      path: '/recepcion-oc',
+      name: RecepcionOCScreen.name,
+      builder: (context, state) => RecepcionOCScreen(),
+      ),             
       
       ]
-      );
+    );

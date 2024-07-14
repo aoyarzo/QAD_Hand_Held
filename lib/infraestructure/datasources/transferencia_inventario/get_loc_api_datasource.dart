@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:qad_hand_held/domain/entities/ubicacion_model.dart';
+import 'package:qad_hand_held/domain/entities/models.dart';
 
 class GetLocApiDatasource {
   final dio = Dio();
