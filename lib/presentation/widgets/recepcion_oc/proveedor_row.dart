@@ -18,7 +18,7 @@ class ProveedorRow extends ConsumerWidget {
       child: Row(
         children: [
           Container(
-            height: 70,
+            height: 80,
             width: 110,
             alignment: Alignment.centerLeft,
             //color: Colors.green,

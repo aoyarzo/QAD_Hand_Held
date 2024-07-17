@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FechaVencimientoRow extends StatelessWidget {
+class CantidadRecepcionOCRow extends StatelessWidget {
   final Color colorQAD;
-  final TextFormField textFieldFechaVenc;
-  final void Function()? iconButton;
+  final TextFormField textFieldCantidad;
 
-  const FechaVencimientoRow({super.key, required this.colorQAD, 
-  required this.textFieldFechaVenc, required this.iconButton});
+  const CantidadRecepcionOCRow({super.key, required this.colorQAD, required this.textFieldCantidad});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +18,7 @@ class FechaVencimientoRow extends StatelessWidget {
             //color: Colors.green,
             child: const Padding(
               padding: EdgeInsets.only(left: 10),
-              child: Text('Fecha \nVencimiento:',
+              child: Text('Cantidad:',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
           ),
@@ -30,17 +28,8 @@ class FechaVencimientoRow extends StatelessWidget {
               //color: Colors.blue,
               height: 50,
               alignment: Alignment.center,
-              child: textFieldFechaVenc,
+              child: textFieldCantidad,
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: const Icon(
-                  Icons.calendar_month_outlined),
-                iconSize: 35,
-                color: colorQAD,
-                onPressed: iconButton),
           ),
         ],
       ),

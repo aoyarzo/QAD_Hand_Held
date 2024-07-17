@@ -16,7 +16,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
-    var textStyleTituto = const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600);
+    var textStyleTituto = const TextStyle(
+        color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600);
     var textStyleDato = const TextStyle(color: Colors.black87, fontSize: 12);
 
     final transf = ref.watch(transfChangeNotifierProvider);
@@ -96,7 +97,7 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
               //color: Colors.red,
               width: double.infinity,
               //height: double.infinity,
-              child: Lista_Articulos(transf, ref),
+              child: listaArticulos(transf, ref),
             ),
           ],
         ),
@@ -120,7 +121,7 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
   }
 }
 
-ListView Lista_Articulos(TransfChangeNotifier transf, WidgetRef ref) {
+ListView listaArticulos(TransfChangeNotifier transf, WidgetRef ref) {
   //tarjas_temp = dbProvider.tarjas;
   //buscarEmpleado('', dbProvider);
   final transfList = transf.transf;
@@ -143,11 +144,12 @@ ListView Lista_Articulos(TransfChangeNotifier transf, WidgetRef ref) {
             print(transfList[index].linea);
           },
           child: Dismissible(
-            key: Key(transfList.toString()),
+            key: UniqueKey(),
             onDismissed: (direction) async {
+              //print(index);
               //transfList.removeWhere((element) => element.linea == index);
 
-              final mensajeResponse = await TransferenciaApiDatasource()
+             final mensajeResponse = await TransferenciaApiDatasource()
                   .transferencia(
                       transfList[index].dominio,
                       transfList[index].articulo,
@@ -163,7 +165,7 @@ ListView Lista_Articulos(TransfChangeNotifier transf, WidgetRef ref) {
 
               ref
                   .read(transfChangeNotifierProvider.notifier)
-                  .removeTransf(index);
+                  .removeTransf(index+1);
             },
             background: Container(
               alignment: AlignmentDirectional.centerEnd,
@@ -402,13 +404,10 @@ Future<String?> _showDialogConfirmar(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           )),
-                      
-                      const SizedBox(height: 10),    
+                      const SizedBox(height: 10),
                       ElevatedButton(
                           onPressed: () async {
-                            
                             Navigator.pop(context);
-
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: colorQAD),
@@ -418,7 +417,7 @@ Future<String?> _showDialogConfirmar(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
-                          )),    
+                          )),
                     ],
                   ),
                 ),
@@ -429,7 +428,8 @@ Future<String?> _showDialogConfirmar(
       });
 }
 
-TextFormField textFieldAlmacenDestino(TextEditingController controllerAlmacenDestino) {
+TextFormField textFieldAlmacenDestino(
+    TextEditingController controllerAlmacenDestino) {
   return TextFormField(
     controller: controllerAlmacenDestino,
     //readOnly: true,
@@ -444,7 +444,8 @@ TextFormField textFieldAlmacenDestino(TextEditingController controllerAlmacenDes
   );
 }
 
-TextFormField textFieldUbicacionDestino(TextEditingController controllerUbicacionDestino) {
+TextFormField textFieldUbicacionDestino(
+    TextEditingController controllerUbicacionDestino) {
   return TextFormField(
     controller: controllerUbicacionDestino,
     //readOnly: true,
@@ -458,5 +459,3 @@ TextFormField textFieldUbicacionDestino(TextEditingController controllerUbicacio
     //onChanged: (value) => buscarTpago(value, dbProvider),
   );
 }
-
-

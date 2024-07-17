@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:qad_hand_held/domain/entities/recepcion_oc/recepcion_model.dart';
 
-class ValDetOCDatasource {
+class RpcOCDatasource {
   final dio = Dio();
 
   String url = 'https://aramark-pilo.qad.cl/apierp/apiputrecepoc.p';
 
   Future<String> rpcOC(
       String dominio, String orden, String articulo, String proveedor,
-      String documento, String almacen, String ubicacion, String lote, 
+      String documento, double cantAbta, double precioFactura, String almacen, String ubicacion, String lote, 
       String referencia, String fechaVenc, String usuario) async {
     final response = await dio.post(
       url,
@@ -17,13 +17,13 @@ class ValDetOCDatasource {
     {
       "Dominio": "$dominio",
       "Orden": "$orden",
-      "Proveedor":"",
-      "Efectiva": "2024-07-10",
-      "Funda": "GD3322",
+      "Proveedor":"$proveedor",
+      "Efectiva": "2024-07-15",
+      "Funda": "$documento",
       "Articulo": "$articulo",
       "Linea": 2,
-      "Costo": 7852,
-      "Cantidad": 5.0,
+      "Costo": precioFactura,
+      "Cantidad": cantAbta,
       "Almacen": "$almacen",
       "Ubicacion": "$ubicacion",
       "Lote": "$lote",

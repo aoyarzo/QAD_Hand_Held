@@ -32,7 +32,13 @@ final appRouter = GoRouter(
       path: '/recepcion-oc',
       name: RecepcionOCScreen.name,
       builder: (context, state) => RecepcionOCScreen(),
-      ),             
+      ),
+
+    GoRoute(
+      path: '/ingreso-arts',
+      name: IngresoArticulosScreen.name,
+      builder: (context, state) => IngresoArticulosScreen(),
+      ),               
       
       ]
     );

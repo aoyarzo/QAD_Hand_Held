@@ -21,3 +21,4 @@ export 'recepcion_oc/lote_row.dart';
 export 'recepcion_oc/referencia_row.dart';
 export 'recepcion_oc/precio_factura_row.dart';
 export 'recepcion_oc/fecha_venc_row.dart';
+export 'recepcion_oc/cantidad_row.dart';
