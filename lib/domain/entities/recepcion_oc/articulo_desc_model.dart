@@ -23,6 +23,7 @@ class ArticuloDescModel {
 class OCompra {
     final String domain;
     final String orden;
+    final int linea;
     final String articulo;
     final String descripcion;
     final double cantAbta;
@@ -32,6 +33,7 @@ class OCompra {
     OCompra({
         required this.domain,
         required this.orden,
+        required this.linea,
         required this.articulo,
         required this.descripcion,
         required this.cantAbta,
@@ -42,6 +44,7 @@ class OCompra {
     factory OCompra.fromJson(Map<String, dynamic> json) => OCompra(
         domain: json["Domain"],
         orden: json["Orden"],
+        linea: json["Linea"],
         articulo: json["Articulo"],
         descripcion: json["Descripcion"],
         cantAbta: json["Cant.Abta"]?.toDouble(),
@@ -52,6 +55,7 @@ class OCompra {
     Map<String, dynamic> toJson() => {
         "Domain": domain,
         "Orden": orden,
+        "Linea": linea,
         "Articulo": articulo,
         "Descripcion": descripcion,
         "Cant.Abta": cantAbta,

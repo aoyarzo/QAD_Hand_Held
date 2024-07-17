@@ -7,7 +7,7 @@ class RpcOCDatasource {
   String url = 'https://aramark-pilo.qad.cl/apierp/apiputrecepoc.p';
 
   Future<String> rpcOC(
-      String dominio, String orden, String articulo, String proveedor,
+      String dominio, String orden, String articulo, int linea, String proveedor, String efectiva,
       String documento, double cantAbta, double precioFactura, String almacen, String ubicacion, String lote, 
       String referencia, String fechaVenc, String usuario) async {
     final response = await dio.post(
@@ -18,10 +18,10 @@ class RpcOCDatasource {
       "Dominio": "$dominio",
       "Orden": "$orden",
       "Proveedor":"$proveedor",
-      "Efectiva": "2024-07-15",
+      "Efectiva": "$efectiva",
       "Funda": "$documento",
       "Articulo": "$articulo",
-      "Linea": 2,
+      "Linea": linea,
       "Costo": precioFactura,
       "Cantidad": cantAbta,
       "Almacen": "$almacen",

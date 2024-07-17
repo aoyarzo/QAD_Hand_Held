@@ -34,7 +34,7 @@ class IngresoArticulosScreen extends ConsumerWidget {
     final documento = ref.watch(documentoProvider);
     final validateArt = ref.watch(validateDetOCProvider);
     final ordenCodProv = ref.watch(ordenCodProvProvider);
-    //final cantAbierta = ref.watch(cantAbiertaProvider);
+    final linea = ref.watch(lineaProvider);
     final recepcion_temp = ref.watch(recepcionOCChangeNotifierProvider);
 
     return Scaffold(
@@ -56,7 +56,7 @@ class IngresoArticulosScreen extends ConsumerWidget {
                     color: Colors.white,
                     onPressed: () {
                       _showDialogRevisarArticulos(
-                          context, textStyleTituto, colorQAD, ref);
+                          context, textStyleTituto, colorQAD, ref, formattedDate);
                     }),
               ],
             ),
@@ -115,6 +115,8 @@ class IngresoArticulosScreen extends ConsumerWidget {
 
                   ref.read(descripcionProvider.notifier).state =
                       descArt[0].descripcion;
+                  ref.read(lineaProvider.notifier).state =
+                      descArt[0].linea;    
                   ref.read(cantAbiertaProvider.notifier).state =
                       descArt[0].cantAbta;
                   ref.read(precioProvider.notifier).state = descArt[0].precio;
@@ -179,7 +181,7 @@ class IngresoArticulosScreen extends ConsumerWidget {
                           formattedDate,
                           documento,
                           _controllerArticulo.text,
-                          1,
+                          linea,
                           double.parse(_controllerPrecioFactura.text),
                           double.parse(_controllerCantidad.text),
                           _controllerLote.text,
@@ -302,7 +304,7 @@ TextFormField textFieldFechaVenc(TextEditingController controllerFechaVenc) {
 }
 
 Future<String?> _showDialogRevisarArticulos(BuildContext context,
-    TextStyle textStyleTituto, Color colorQAD, WidgetRef ref) async {
+    TextStyle textStyleTituto, Color colorQAD, WidgetRef ref, String efectiva) async {
   final recepcion = ref.watch(recepcionOCChangeNotifierProvider).recepcion;
 
   return showDialog<String>(
@@ -334,7 +336,9 @@ Future<String?> _showDialogRevisarArticulos(BuildContext context,
                                 recepcion[i].dominio,
                                 recepcion[i].orden,
                                 recepcion[i].articulo,
+                                recepcion[i].linea,
                                 recepcion[i].proveedor,
+                                efectiva,
                                 recepcion[i].funda,
                                 recepcion[i].cantidad,
                                 recepcion[i].costo,

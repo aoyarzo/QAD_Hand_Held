@@ -5,6 +5,10 @@ final descripcionProvider = StateProvider<String>((ref) {
   return '';
 });
 
+final lineaProvider = StateProvider<int>((ref) {
+  return 0;
+});
+
 final cantAbiertaProvider = StateProvider<double>((ref) {
   return 0;
 });
