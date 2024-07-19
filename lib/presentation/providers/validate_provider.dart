@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+//Validaciones Transferencia Inventario
 final validateLocProvider = StateProvider<bool>((ref) {
   return false;
 });
@@ -16,6 +17,7 @@ final transfProvider = StateProvider<String>((ref) {
   return '';
 });
 
+//Validaciones Recepción OC
 final validateOrdenProvider = StateProvider<bool>((ref) {
   return false;
 });
@@ -29,5 +31,14 @@ final documentoProvider = StateProvider<String>((ref) {
 });
 
 final validateDetOCProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+//Validaciones Ajuste Inventario
+final validateArtAjusteInvProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final validateLocAjusteInvProvider = StateProvider<bool>((ref) {
   return false;
 });

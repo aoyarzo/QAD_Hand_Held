@@ -6,7 +6,7 @@ class RpcOCDatasource {
 
   String url = 'https://aramark-pilo.qad.cl/apierp/apiputrecepoc.p';
 
-  Future<String> rpcOC(
+  Future<List<Respuesta>> rpcOC(
       String dominio, String orden, String articulo, int linea, String proveedor, String efectiva,
       String documento, double cantAbta, double precioFactura, String almacen, String ubicacion, String lote, 
       String referencia, String fechaVenc, String usuario) async {
@@ -43,6 +43,6 @@ class RpcOCDatasource {
 
     print(rpcOCResponse.respuesta[0].mensaje);
 
-    return rpcOCResponse.respuesta[0].mensaje;
+    return rpcOCResponse.respuesta;
   }
 }

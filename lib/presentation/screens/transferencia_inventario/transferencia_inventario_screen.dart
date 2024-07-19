@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
-import 'package:qad_hand_held/presentation/providers/transferencia_provider.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
@@ -106,7 +106,7 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
           backgroundColor: colorQAD,
           child: const Icon(Icons.check_box_outlined,
               size: 50, color: Colors.white),
-          onPressed: () {
+          onPressed: () async {
             _showDialogConfirmar(
                 context,
                 textStyleTituto,
@@ -116,6 +116,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                 ref,
                 _controllerAlmacenDestino,
                 _controllerUbicacionDestino);
+
+            //await _mensajeResponse(context, colorQAD, ref);
           }),
     );
   }
@@ -149,7 +151,7 @@ ListView listaArticulos(TransfChangeNotifier transf, WidgetRef ref) {
               //print(index);
               //transfList.removeWhere((element) => element.linea == index);
 
-             final mensajeResponse = await TransferenciaApiDatasource()
+              final mensajeResponse = await TransferenciaApiDatasource()
                   .transferencia(
                       transfList[index].dominio,
                       transfList[index].articulo,
@@ -165,7 +167,7 @@ ListView listaArticulos(TransfChangeNotifier transf, WidgetRef ref) {
 
               ref
                   .read(transfChangeNotifierProvider.notifier)
-                  .removeTransf(index+1);
+                  .removeTransf(index + 1);
             },
             background: Container(
               alignment: AlignmentDirectional.centerEnd,
@@ -375,23 +377,36 @@ Future<String?> _showDialogConfirmar(
                       ElevatedButton(
                           onPressed: () async {
                             for (int i = 0; i < transf.transf.length; i++) {
-                              await TransferenciaApiDatasource().transferencia(
-                                  transf.transf[i].dominio,
-                                  transf.transf[i].articulo,
-                                  transf.transf[i].almOrig,
-                                  Preferences.ubicTrans,
-                                  transf.transf[i].lotOrig,
-                                  _controllerAlmacen.text,
-                                  _controllerUbicacion.text,
-                                  transf.transf[i].refOrig,
-                                  transf.transf[i].cantidad,
-                                  transf.transf[i].usuario);
+                              final response =
+                                  await TransferenciaApiDatasource()
+                                      .transferencia(
+                                          transf.transf[i].dominio,
+                                          transf.transf[i].articulo,
+                                          transf.transf[i].almOrig,
+                                          Preferences.ubicTrans,
+                                          transf.transf[i].lotOrig,
+                                          _controllerAlmacen.text,
+                                          _controllerUbicacion.text,
+                                          transf.transf[i].refOrig,
+                                          transf.transf[i].cantidad,
+                                          transf.transf[i].usuario);
+
+                              ref
+                                  .read(responseTransfChangeNotifierProvider
+                                      .notifier)
+                                  .addRespuesta(
+                                      response[0].number,
+                                      response[0].mensaje,
+                                      response[0].severidad);
                             }
 
                             ref
                                 .read(transfChangeNotifierProvider.notifier)
                                 .clearTransf();
+
                             Navigator.pop(context);
+
+                            await _mensajeResponse(context, colorQAD, ref);
 
                             //context.go('/transf-inv');
                           },
@@ -457,5 +472,54 @@ TextFormField textFieldUbicacionDestino(
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
     //onChanged: (value) => buscarTpago(value, dbProvider),
+  );
+}
+
+Future<void> _mensajeResponse(
+    BuildContext context, Color colorQAD, WidgetRef ref) {
+  final respuesta = ref.watch(responseTransfChangeNotifierProvider);
+
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 180,
+          child: Column(
+            children: [
+              const Text('¡Registros Enviados Exitosamente!', 
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600), 
+              textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: respuesta.respuesta.length,
+                itemBuilder: (context, index) {
+                  return Text(respuesta.respuesta[index].mensaje,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black87),
+                          textAlign: TextAlign.center,);
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
   );
 }

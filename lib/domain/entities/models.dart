@@ -7,3 +7,4 @@ export 'recepcion_oc/orden_model.dart';
 export 'recepcion_oc/recepcion_oc_model.dart';
 //export 'recepcion_oc/articulo_desc_model.dart';
 //export 'recepcion_oc/recepcion_model.dart';
+//export 'ajuste_inv/ajuste_inv_model.dart';

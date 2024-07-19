@@ -6,7 +6,7 @@ class GetPartApiDatasource {
 
   String url = 'https://aramark-pilo.qad.cl/apierp/apigetparts';
 
-  Future<String> validatePart(String dominio, String articulo) async {
+  Future<List<Articulo>> validatePart(String dominio, String articulo) async {
     final response = await dio.post(
       url,
       data: {
@@ -29,6 +29,6 @@ class GetPartApiDatasource {
 
     //print(response.data);
 
-    return validatePartResponse.articulos[0].descripcion;
+    return validatePartResponse.articulos;
   }
 }

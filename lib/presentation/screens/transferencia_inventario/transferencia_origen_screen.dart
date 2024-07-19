@@ -81,7 +81,7 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                               Preferences.dominio, _controllerArticulo.text);
 
                       ref.read(validatePartProvider.notifier).state =
-                          descPart.isEmpty ? false : true;
+                          descPart[0].descripcion.isEmpty ? false : true;
                       print(validatePart);
                     })
                 : Container(),
@@ -105,7 +105,6 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () async {
-
                   //Guarda en Provider
                   ref.read(transfChangeNotifierProvider.notifier).addTransf(
                       transf.transf.length + 1,
@@ -130,13 +129,15 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                           int.parse(_controllerCantidad.text),
                           Preferences.usuario);
 
-                  print(mensajeResponse);
+                  ref.read(responseTransfOrigenProvider.notifier).state =
+                      mensajeResponse[0].mensaje;
 
                   ref.read(validatePartProvider.notifier).state = false;
                   ref.read(validateLocProvider.notifier).state = false;
 
-                  context.go('/transf-inv');
-                  
+                  //context.go('/transf-inv');
+
+                  _mensajeResponse(context, colorQAD, ref);
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                 child: const Text(
@@ -153,20 +154,19 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
   }
 }
 
-
 TextFormField textFieldAlmacenOrigen(TextEditingController controllerAlmacen) {
   return TextFormField(
-    controller: controllerAlmacen,
-    readOnly: true,
-    //autocorrect: false,
-    decoration: inputDecorationTextFormField()
-    /*validator: (value) {
+      controller: controllerAlmacen,
+      readOnly: true,
+      //autocorrect: false,
+      decoration: inputDecorationTextFormField()
+      /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
-    //onChanged: (value) => buscarTpago(value, dbProvider),
-  );
+      //onChanged: (value) => buscarTpago(value, dbProvider),
+      );
 }
 
 TextFormField textFieldUbicacionVerify(
@@ -246,3 +246,46 @@ TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
   );
 }
 
+Future<void> _mensajeResponse(
+    BuildContext context, Color colorQAD, WidgetRef ref) {
+  final respuesta = ref.watch(responseTransfOrigenProvider);
+
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 180,
+          child: Column(
+            children: [
+              const Text('¡Registro Enviado Exitosamente!',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              Text(
+                    respuesta,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  ),      
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    context.go('/transf-inv');
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

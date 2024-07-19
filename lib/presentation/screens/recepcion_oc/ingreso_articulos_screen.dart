@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 import 'package:qad_hand_held/presentation/providers/providers.dart';
-import 'package:qad_hand_held/presentation/providers/recepcion_oc_provider.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
@@ -55,8 +54,8 @@ class IngresoArticulosScreen extends ConsumerWidget {
                     iconSize: 30,
                     color: Colors.white,
                     onPressed: () {
-                      _showDialogRevisarArticulos(
-                          context, textStyleTituto, colorQAD, ref, formattedDate);
+                      _showDialogRevisarArticulos(context, textStyleTituto,
+                          colorQAD, ref, formattedDate);
                     }),
               ],
             ),
@@ -115,13 +114,13 @@ class IngresoArticulosScreen extends ConsumerWidget {
 
                   ref.read(descripcionProvider.notifier).state =
                       descArt[0].descripcion;
-                  ref.read(lineaProvider.notifier).state =
-                      descArt[0].linea;    
+                  ref.read(lineaProvider.notifier).state = descArt[0].linea;
                   ref.read(cantAbiertaProvider.notifier).state =
                       descArt[0].cantAbta;
                   ref.read(precioProvider.notifier).state = descArt[0].precio;
 
-                  print(descArt);
+                  print(descArt[0].descripcion);
+                  print(validateArt);
                 }),
             validateArt ? ArticuloResponseRow(colorQAD: colorQAD) : Container(),
             validateArt
@@ -303,8 +302,12 @@ TextFormField textFieldFechaVenc(TextEditingController controllerFechaVenc) {
       );
 }
 
-Future<String?> _showDialogRevisarArticulos(BuildContext context,
-    TextStyle textStyleTituto, Color colorQAD, WidgetRef ref, String efectiva) async {
+Future<String?> _showDialogRevisarArticulos(
+    BuildContext context,
+    TextStyle textStyleTituto,
+    Color colorQAD,
+    WidgetRef ref,
+    String efectiva) async {
   final recepcion = ref.watch(recepcionOCChangeNotifierProvider).recepcion;
 
   return showDialog<String>(
@@ -349,17 +352,24 @@ Future<String?> _showDialogRevisarArticulos(BuildContext context,
                                 recepcion[i].fchVcto,
                                 recepcion[i].usuario);
                             print(recepcionOC);
+                            ref
+                                .read(responseTransfChangeNotifierProvider
+                                    .notifier)
+                                .addRespuesta(
+                                    recepcionOC[0].number,
+                                    recepcionOC[0].mensaje,
+                                    recepcionOC[0].severidad);
                           }
 
                           ref.read(validateDetOCProvider.notifier).state =
                               false;
                           ref.read(validateOrdenProvider.notifier).state =
                               false;
-                          ref.read(recepcionOCChangeNotifierProvider.notifier)
+                          ref
+                              .read(recepcionOCChangeNotifierProvider.notifier)
                               .clearRecepcion();
 
-                          context.go('/recepcion-oc');
-                          
+                          await _mensajeResponse(context, colorQAD, ref);
                         },
                         style:
                             ElevatedButton.styleFrom(backgroundColor: colorQAD),
@@ -579,4 +589,54 @@ ListView listaArticulosRecepcionOC(WidgetRef ref) {
           ),
         );
       });
+}
+
+Future<void> _mensajeResponse(
+    BuildContext context, Color colorQAD, WidgetRef ref) {
+  final respuesta = ref.watch(responseTransfChangeNotifierProvider);
+
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 180,
+          child: Column(
+            children: [
+              const Text('¡Registro Enviado Exitosamente!',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: respuesta.respuesta.length,
+                itemBuilder: (context, index) {
+                  return Text(
+                    respuesta.respuesta[index].mensaje,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    context.go('/recepcion-oc');
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

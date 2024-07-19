@@ -88,9 +88,9 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                context.go('/transf-inv');
+                context.go('/ajuste-inv');
               },
-              title: const Text('Conteo Inv. Cíclico',
+              title: const Text('Ajuste Inventario',
                   style: TextStyle(fontSize: 14)),
               leading: Icon(
                 Icons.payments_outlined,

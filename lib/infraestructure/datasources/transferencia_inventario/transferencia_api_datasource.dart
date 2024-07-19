@@ -6,7 +6,7 @@ class TransferenciaApiDatasource {
 
   String url = 'https://aramark-pilo.qad.cl/apierp/apiputtransfer';
 
-  Future<String> transferencia( String dominio, String articulo, 
+  Future<List<Respuesta>> transferencia( String dominio, String articulo, 
   String almOrig, String ubiOrig, String lotOrig, String almDest, 
   String ubicDest, String refOrig, int cantidad, String usuario) async {
     final response = await dio.post(
@@ -35,7 +35,7 @@ class TransferenciaApiDatasource {
 
     print(response.data);
 
-    return validateTransResponse.respuesta[0].mensaje;
+    return validateTransResponse.respuesta;
 
   }
 }
