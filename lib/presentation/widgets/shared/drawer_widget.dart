@@ -99,7 +99,7 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                //Navigator.pushReplacementNamed(context, 'conteoFisico');
+                context.go('/entrada-salida');
               },
               title: const Text('Entrada/Salida No Planif.',
                   style: TextStyle(fontSize: 14)),
@@ -117,7 +117,7 @@ class DrawerMenuWidget extends StatelessWidget {
                 color: colorQAD,
               ),
             ),
-           /* ListTile(
+            /* ListTile(
               onTap: () {
                 context.go('/archivo-control');
               },

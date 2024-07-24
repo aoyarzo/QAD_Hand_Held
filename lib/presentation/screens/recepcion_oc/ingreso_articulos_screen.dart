@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -109,18 +110,24 @@ class IngresoArticulosScreen extends ConsumerWidget {
                   final descArt = await ValDetOCDatasource().validateDetOC(
                       Preferences.dominio, orden, _controllerArticulo.text);
 
-                  ref.read(validateDetOCProvider.notifier).state =
-                      descArt[0].descripcion.isEmpty ? false : true;
+                  if (descArt[0].descripcion.isEmpty) {
+                    _mensajeErrorValidacion(
+                        context, colorQAD, 'Artículo No Encontrado');
+                  
+                  } else {
+                    ref.read(validateDetOCProvider.notifier).state = true;
 
-                  ref.read(descripcionProvider.notifier).state =
-                      descArt[0].descripcion;
-                  ref.read(lineaProvider.notifier).state = descArt[0].linea;
-                  ref.read(cantAbiertaProvider.notifier).state =
-                      descArt[0].cantAbta;
-                  ref.read(precioProvider.notifier).state = descArt[0].precio;
+                    ref.read(descripcionProvider.notifier).state =
+                        descArt[0].descripcion;
+                    ref.read(lineaProvider.notifier).state = descArt[0].linea;
+                    ref.read(cantAbiertaProvider.notifier).state =
+                        descArt[0].cantAbta;
+                    ref.read(precioProvider.notifier).state = descArt[0].precio;
 
-                  print(descArt[0].descripcion);
-                  print(validateArt);
+                  }               
+                  //print(descArt[0].descripcion);
+                  //print(validateArt);
+
                 }),
             validateArt ? ArticuloResponseRow(colorQAD: colorQAD) : Container(),
             validateArt
@@ -232,6 +239,10 @@ TextFormField textFieldCantidadRecepcionOC(
     TextEditingController controllerCantidad) {
   return TextFormField(
       controller: controllerCantidad,
+      keyboardType: const TextInputType.numberWithOptions(),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+      ],
       //autocorrect: false,
       decoration: inputDecorationTextFormField()
       /*validator: (value) {
@@ -276,6 +287,10 @@ TextFormField textFieldPrecioFactura(
     TextEditingController controllerPrecioFactura) {
   return TextFormField(
       controller: controllerPrecioFactura,
+      keyboardType: const TextInputType.numberWithOptions(),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+      ],
       //autocorrect: false,
       decoration: inputDecorationTextFormField()
       /*validator: (value) {
@@ -353,7 +368,7 @@ Future<String?> _showDialogRevisarArticulos(
                                 recepcion[i].usuario);
                             print(recepcionOC);
                             ref
-                                .read(responseTransfChangeNotifierProvider
+                                .read(responseRecepcionChangeNotifierProvider
                                     .notifier)
                                 .addRespuesta(
                                     recepcionOC[0].number,
@@ -593,7 +608,7 @@ ListView listaArticulosRecepcionOC(WidgetRef ref) {
 
 Future<void> _mensajeResponse(
     BuildContext context, Color colorQAD, WidgetRef ref) {
-  final respuesta = ref.watch(responseTransfChangeNotifierProvider);
+  final respuesta = ref.watch(responseRecepcionChangeNotifierProvider);
 
   return showDialog<void>(
     context: context,
@@ -602,28 +617,78 @@ Future<void> _mensajeResponse(
         title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
         content: SizedBox(
           width: 80,
-          height: 180,
+          height: 220,
           child: Column(
             children: [
-              const Text('¡Registro Enviado Exitosamente!',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center),
+              respuesta.respuesta[0].number == '302'
+                  ? const Text('¡Registros No Enviados!',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center)
+                  : const Text('¡Registros Enviados Exitosamente!',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center),
               const SizedBox(height: 10),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: respuesta.respuesta.length,
-                itemBuilder: (context, index) {
-                  return Text(
-                    respuesta.respuesta[index].mensaje,
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
-                    textAlign: TextAlign.center,
-                  );
-                },
+              SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: respuesta.respuesta.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      respuesta.respuesta[index].mensaje,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black87),
+                      textAlign: TextAlign.center,
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
                     context.go('/recepcion-oc');
+                    /*ref
+                        .read(responseRecepcionChangeNotifierProvider.notifier)
+                        .clearRecepcion();*/
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> _mensajeErrorValidacion(
+    BuildContext context, Color colorQAD, String errorMsj) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 100,
+          child: Column(
+            children: [
+              Text(errorMsj,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                   child: const Text(

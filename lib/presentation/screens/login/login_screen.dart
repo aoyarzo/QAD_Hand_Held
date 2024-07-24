@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   static const name = 'login-screen';
 
   final _controllerUsuario = TextEditingController();
@@ -11,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref ) {
     Color colorQAD = const Color(0xFFe97a3b);
     Color colorQAD2 = const Color(0xFF0b2038);
 
@@ -75,7 +78,14 @@ class LoginScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: IconButton(
-                              onPressed: () {
+                              onPressed: () async {
+
+                                final descSite = await GetSiteApiDatasource().
+                                validateSite(Preferences.dominio, Preferences.almacen);
+
+                                ref.read(validateSiteProvider.notifier).state =
+                                descSite.isEmpty ? false : true;
+                                
                                 context.go('/archivo-control');
                               },
                               icon: Icon(

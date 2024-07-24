@@ -64,11 +64,12 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                       Preferences.almacen,
                       _controllerUbiOrig.text);
 
-                  ref.read(validateLocProvider.notifier).state =
-                      descLoc.isEmpty ? false : true;
-                  print(validateLoc);
-                  //ref.read(validateLocProvider.notifier).state = true;
-                  //ref.read(validatePartProvider.notifier).state = true;
+                  if (descLoc.isEmpty) {
+                    await _mensajeErrorValidacion(
+                        context, colorQAD, 'Ubicación No Encontrada');
+                  } else {
+                    ref.read(validateLocProvider.notifier).state = true;
+                  }
                 }),
             validateLoc
                 ? ArticuloRow(
@@ -80,9 +81,15 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                           .validatePart(
                               Preferences.dominio, _controllerArticulo.text);
 
-                      ref.read(validatePartProvider.notifier).state =
-                          descPart[0].descripcion.isEmpty ? false : true;
-                      print(validatePart);
+                      if (descPart[0].descripcion.isEmpty) {
+                        _mensajeErrorValidacion(
+                            context, colorQAD, 'Artículo No Encontrado');
+                      } else {
+                        ref.read(validatePartProvider.notifier).state = true;
+
+                      }
+                      //print(validatePart);
+                      
                     })
                 : Container(),
             validatePart
@@ -265,14 +272,51 @@ Future<void> _mensajeResponse(
                   textAlign: TextAlign.center),
               const SizedBox(height: 10),
               Text(
-                    respuesta,
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
-                    textAlign: TextAlign.center,
-                  ),      
+                respuesta,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () async {
                     context.go('/transf-inv');
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> _mensajeErrorValidacion(
+    BuildContext context, Color colorQAD, String errorMsj) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 100,
+          child: Column(
+            children: [
+              Text(errorMsj,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                   child: const Text(

@@ -104,9 +104,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: colorQAD,
-          child: const Icon(Icons.check_box_outlined,
-              size: 50, color: Colors.white),
-          onPressed: () async {
+          onPressed: transf.transf.isEmpty ? null : () async {
+            ref.read(responseTransfChangeNotifierProvider.notifier).clearTransf();
             _showDialogConfirmar(
                 context,
                 textStyleTituto,
@@ -118,7 +117,10 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                 _controllerUbicacionDestino);
 
             //await _mensajeResponse(context, colorQAD, ref);
-          }),
+          },
+          child: const Icon(Icons.check_box_outlined,
+              size: 50, color: Colors.white)
+          ),
     );
   }
 }
@@ -486,26 +488,41 @@ Future<void> _mensajeResponse(
         title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
         content: SizedBox(
           width: 80,
-          height: 180,
+          height: 220,
           child: Column(
             children: [
-              const Text('¡Registros Enviados Exitosamente!', 
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600), 
-              textAlign: TextAlign.center),
+              respuesta.respuesta[0].number == '302'
+                  ? const Text('¡Registros No Enviados!',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center)
+                  : const Text('¡Registros Enviados Exitosamente!',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center),
               const SizedBox(height: 10),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: respuesta.respuesta.length,
-                itemBuilder: (context, index) {
-                  return Text(respuesta.respuesta[index].mensaje,
+              SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: respuesta.respuesta.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      respuesta.respuesta[index].mensaje,
                       style:
                           const TextStyle(fontSize: 14, color: Colors.black87),
-                          textAlign: TextAlign.center,);
-                },
+                      textAlign: TextAlign.center,
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
+                    /*ref
+                        .read(responseTransfChangeNotifierProvider.notifier)
+                        .clearTransf();*/
+
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: colorQAD),

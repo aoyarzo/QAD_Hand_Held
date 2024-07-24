@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qad_hand_held/domain/entities/recepcion_oc/recepcion_model.dart';
+import 'package:qad_hand_held/domain/entities/ajuste_inv/ajuste_inv_model.dart';
 
-final responseRecepcionChangeNotifierProvider =
-    ChangeNotifierProvider<ResponseRecepcionChangeNotifier>((ref) {
-  return ResponseRecepcionChangeNotifier();
+final responseAjusteInvChangeNotifierProvider =
+    ChangeNotifierProvider<ResponseAjusteInvChangeNotifier>((ref) {
+  return ResponseAjusteInvChangeNotifier();
 });
 
-class ResponseRecepcionChangeNotifier extends ChangeNotifier {
+class ResponseAjusteInvChangeNotifier extends ChangeNotifier {
   List<Respuesta> respuesta = [];
 
   void addRespuesta(String number, String mensaje, String severidad) {
@@ -21,7 +21,7 @@ class ResponseRecepcionChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearRecepcion() {
+  void clearRespuesta() {
     respuesta.clear();
     notifyListeners();
   }

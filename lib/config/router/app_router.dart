@@ -44,7 +44,13 @@ final appRouter = GoRouter(
       path: '/ajuste-inv',
       name: AjusteInventarioScreen.name,
       builder: (context, state) => AjusteInventarioScreen(),
-      ),                  
+      ),
+
+    GoRoute(
+      path: '/entrada-salida',
+      name: EntradaSalidaScreen.name,
+      builder: (context, state) => EntradaSalidaScreen(),
+      ),                      
       
       ]
     );

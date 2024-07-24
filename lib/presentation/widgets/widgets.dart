@@ -1,5 +1,6 @@
 export 'shared/drawer_widget.dart';
 export 'shared/inputdecoration_textformfield.dart';
+export 'shared/error_text_widget.dart';
 export 'transferencia_inventario/articulo_row.dart';
 export 'transferencia_inventario/almacen_row.dart';
 export 'transferencia_inventario/ubicacion_row.dart';
@@ -28,3 +29,9 @@ export 'ajuste_inv/cantidad_row.dart';
 export 'ajuste_inv/lote_row.dart';
 export 'ajuste_inv/referencia_row.dart';
 export 'ajuste_inv/ubicacion_row.dart';
+export 'entrada_salida/articulo_response_row.dart';
+export 'entrada_salida/articulo_row.dart';
+export 'entrada_salida/cantidad_row.dart';
+export 'entrada_salida/lote_row.dart';
+export 'entrada_salida/referencia_row.dart';
+export 'entrada_salida/ubicacion_row.dart';

@@ -42,3 +42,16 @@ final validateArtAjusteInvProvider = StateProvider<bool>((ref) {
 final validateLocAjusteInvProvider = StateProvider<bool>((ref) {
   return false;
 });
+
+final validateCantidadAjusteInvProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+//Validaciones Entrada Salida
+final selectedValueProvider = StateProvider<String>((ref) {
+  return 'Entrada';
+});
+
+final validateCantidadEntradaSalidaProvider = StateProvider<bool>((ref) {
+  return false;
+});

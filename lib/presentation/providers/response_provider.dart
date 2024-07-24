@@ -34,3 +34,11 @@ final responseTransfOrigenProvider = StateProvider<String>((ref) {
 final responseAjusteInvProvider = StateProvider<String>((ref) {
   return '';
 });
+
+final responseEntradaNoPlanProvider = StateProvider<String>((ref) {
+  return '';
+});
+
+final responseSalidaNoPlanProvider = StateProvider<String>((ref) {
+  return '';
+});

@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
+import 'package:qad_hand_held/infraestructure/datasources/entrada_salida/rcp_no_plan_api_datasource.dart';
+import 'package:qad_hand_held/infraestructure/datasources/entrada_salida/sal_no_plan_api_datasource.dart';
 import 'package:qad_hand_held/presentation/providers/providers.dart';
-import 'package:qad_hand_held/presentation/providers/response_ajuste_inv_provider.dart';
 import 'package:qad_hand_held/presentation/widgets/widgets.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
-class AjusteInventarioScreen extends ConsumerWidget {
-  static const name = 'ajuste-inv-screen';
-  AjusteInventarioScreen({super.key});
+class EntradaSalidaScreen extends ConsumerWidget {
+  static const name = 'entrada-salida-screen';
+  static const values = <String>['Entrada', 'Salida'];
+  EntradaSalidaScreen({super.key});
 
   final _controllerUbicacion = TextEditingController();
   final _controllerArticulo = TextEditingController();
@@ -23,10 +25,12 @@ class AjusteInventarioScreen extends ConsumerWidget {
     var textStyleTituto = const TextStyle(
         color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600);
     var textStyleDato = const TextStyle(color: Colors.black87, fontSize: 12);
+    //String selectedValue = EntradaSalidaScreen.values.first;
 
+    final selectedValue = ref.watch(selectedValueProvider);
     final validateLoc = ref.watch(validateLocAjusteInvProvider);
     final validateArt = ref.watch(validateArtAjusteInvProvider);
-    final validateCantidad = ref.watch(validateCantidadAjusteInvProvider);
+    final validateCantidad = ref.watch(validateCantidadEntradaSalidaProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -35,7 +39,7 @@ class AjusteInventarioScreen extends ConsumerWidget {
               backgroundColor: colorQAD,
               title: const Row(
                 children: [
-                  Text('Ajuste Inventario',
+                  Text('Entrada/Salida No Planificada',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -83,11 +87,31 @@ class AjusteInventarioScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            //const SizedBox(height: 20),
+            Row(
+              children: EntradaSalidaScreen.values.map(
+                (value) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    //color: Colors.green,
+                    child: RadioListTile<String>(
+                      value: value,
+                      groupValue: selectedValue,
+                      title: Text(value,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500)),
+                      onChanged: (value) => {
+                        ref.read(selectedValueProvider.notifier).state = value!,
+                      },
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
             UbicacionAjusteInv(
                 colorQAD: colorQAD,
                 textFieldUbicacion:
-                    textFieldUbicacionAjusteInv(_controllerUbicacion),
+                    textFieldUbicacionEntradaSalida(_controllerUbicacion),
                 iconButton: () async {
                   final descLoc = await GetLocApiDatasource().validateLoc(
                       Preferences.dominio,
@@ -106,7 +130,7 @@ class AjusteInventarioScreen extends ConsumerWidget {
                 ? ArticuloAjusteInvRow(
                     colorQAD: colorQAD,
                     textFieldArticulo:
-                        textFieldArticuloAjusteInv(_controllerArticulo),
+                        textFieldArticuloEntradaSalida(_controllerArticulo),
                     iconButton: () async {
                       final descPart = await GetPartApiDatasource()
                           .validatePart(
@@ -134,23 +158,21 @@ class AjusteInventarioScreen extends ConsumerWidget {
             validateArt
                 ? LoteAjusteInvRow(
                     colorQAD: colorQAD,
-                    textFieldLote: textFieldLoteAjusteInv(_controllerLote))
+                    textFieldLote: textFieldLoteEntradaSalida(_controllerLote))
                 : Container(),
             validateArt
                 ? ReferenciaAjusteInvRow(
                     colorQAD: colorQAD,
                     textFieldReferencia:
-                        textFieldReferenciaAjusteInv(_controllerReferencia))
+                        textFieldReferenciaEntradaSalida(_controllerReferencia))
                 : Container(),
             validateArt
                 ? CantidadAjusteInvRow(
                     colorQAD: colorQAD,
                     textFieldCantidad:
-                        textFieldCantidadAjusteInv(_controllerCantidad, ref))
+                        textFieldCantidadEntradaSalida(_controllerCantidad, ref))
                 : Container(),
-            validateCantidad
-                ? const ErrorTextValidate()
-                : Container(),
+            validateCantidad ? const ErrorTextValidate() : Container(),
             const SizedBox(height: 30),
             ValueListenableBuilder(
               valueListenable: _controllerCantidad,
@@ -160,33 +182,54 @@ class AjusteInventarioScreen extends ConsumerWidget {
                             validateLoc &&
                             validateArt
                         ? () async {
-                            //print(double.parse(_controllerCantidad.text));
-
                             if (double.parse(_controllerCantidad.text) > 0) {
                               ref
-                                  .read(responseAjusteInvChangeNotifierProvider
-                                      .notifier)
+                                  .read(
+                                      responseEntradaSalidaNoPlanChangeNotifierProvider
+                                          .notifier)
                                   .clearRespuesta();
 
-                              final ajusteInv = await AjusInvDatasource()
-                                  .ajusInv(
-                                      Preferences.dominio,
-                                      _controllerArticulo.text,
-                                      Preferences.almacen,
-                                      _controllerUbicacion.text,
-                                      _controllerLote.text,
-                                      _controllerReferencia.text,
-                                      double.parse(_controllerCantidad.text),
-                                      Preferences.usuario);
+                              if (selectedValue == 'Entrada') {
+                                final entradaNoPlan =
+                                    await RcpNoPlanDatasource().rcpNoPlan(
+                                        Preferences.dominio,
+                                        _controllerArticulo.text,
+                                        Preferences.almacen,
+                                        _controllerUbicacion.text,
+                                        _controllerLote.text,
+                                        _controllerReferencia.text,
+                                        double.parse(_controllerCantidad.text));
 
-                              print(ajusteInv);
-                              ref
-                                  .read(responseAjusteInvChangeNotifierProvider
-                                      .notifier)
-                                  .addRespuesta(
-                                      ajusteInv[0].number,
-                                      ajusteInv[0].mensaje,
-                                      ajusteInv[0].severidad);
+                                print(entradaNoPlan);
+                                ref
+                                    .read(
+                                        responseEntradaSalidaNoPlanChangeNotifierProvider
+                                            .notifier)
+                                    .addRespuesta(
+                                        entradaNoPlan[0].number,
+                                        entradaNoPlan[0].mensaje,
+                                        entradaNoPlan[0].severidad);
+                              } else {
+                                final salidaNoPlan = await SalNoPlanDatasource()
+                                    .salNoPlan(
+                                        Preferences.dominio,
+                                        _controllerArticulo.text,
+                                        Preferences.almacen,
+                                        _controllerUbicacion.text,
+                                        _controllerLote.text,
+                                        _controllerReferencia.text,
+                                        double.parse(_controllerCantidad.text));
+
+                                print(salidaNoPlan);
+                                ref
+                                    .read(
+                                        responseEntradaSalidaNoPlanChangeNotifierProvider
+                                            .notifier)
+                                    .addRespuesta(
+                                        salidaNoPlan[0].number,
+                                        salidaNoPlan[0].mensaje,
+                                        salidaNoPlan[0].severidad);
+                              }
 
                               _controllerUbicacion.clear();
                               _controllerArticulo.clear();
@@ -201,7 +244,7 @@ class AjusteInventarioScreen extends ConsumerWidget {
                                   .state = false;
 
                               await _mensajeResponse(context, colorQAD, ref);
-                            }
+                            } 
                           }
                         : null,
                     style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
@@ -214,6 +257,7 @@ class AjusteInventarioScreen extends ConsumerWidget {
                     ));
               },
             ),
+
             const SizedBox(height: 10)
           ],
         ),
@@ -222,7 +266,7 @@ class AjusteInventarioScreen extends ConsumerWidget {
   }
 }
 
-TextFormField textFieldUbicacionAjusteInv(
+TextFormField textFieldUbicacionEntradaSalida(
     TextEditingController controllerUbicacion) {
   return TextFormField(
       controller: controllerUbicacion,
@@ -237,7 +281,7 @@ TextFormField textFieldUbicacionAjusteInv(
       );
 }
 
-TextFormField textFieldArticuloAjusteInv(
+TextFormField textFieldArticuloEntradaSalida(
     TextEditingController controllerArticulo) {
   return TextFormField(
       controller: controllerArticulo,
@@ -252,7 +296,7 @@ TextFormField textFieldArticuloAjusteInv(
       );
 }
 
-TextFormField textFieldLoteAjusteInv(TextEditingController controllerLote) {
+TextFormField textFieldLoteEntradaSalida(TextEditingController controllerLote) {
   return TextFormField(
       controller: controllerLote,
       //autocorrect: false,
@@ -266,7 +310,7 @@ TextFormField textFieldLoteAjusteInv(TextEditingController controllerLote) {
       );
 }
 
-TextFormField textFieldReferenciaAjusteInv(
+TextFormField textFieldReferenciaEntradaSalida(
     TextEditingController controllerReferencia) {
   return TextFormField(
       controller: controllerReferencia,
@@ -281,31 +325,32 @@ TextFormField textFieldReferenciaAjusteInv(
       );
 }
 
-TextFormField textFieldCantidadAjusteInv(
+TextFormField textFieldCantidadEntradaSalida(
     TextEditingController controllerCantidad, WidgetRef ref) {
   return TextFormField(
-    controller: controllerCantidad,
-    keyboardType: const TextInputType.numberWithOptions(),
-    inputFormatters: [
-      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
-    ],
-    //autocorrect: false,
-    decoration: inputDecorationTextFormField(),
-    /*validator: (value) {
+      controller: controllerCantidad,
+      keyboardType: const TextInputType.numberWithOptions(),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+      ],
+      //autocorrect: false,
+      decoration: inputDecorationTextFormField(),
+      /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
-    onChanged: (value) {
-      ref.read(validateCantidadAjusteInvProvider.notifier).state =
+      onChanged: (value) {
+      ref.read(validateCantidadEntradaSalidaProvider.notifier).state =
           double.parse(value) != 0 ? false : true;
     },
-  );
+      );
 }
 
 Future<void> _mensajeResponse(
     BuildContext context, Color colorQAD, WidgetRef ref) {
-  final respuesta = ref.watch(responseAjusteInvChangeNotifierProvider);
+  final respuesta =
+      ref.watch(responseEntradaSalidaNoPlanChangeNotifierProvider);
 
   return showDialog<void>(
     context: context,

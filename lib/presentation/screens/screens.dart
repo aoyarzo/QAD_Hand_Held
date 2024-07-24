@@ -5,3 +5,4 @@ export 'transferencia_inventario/transferencia_origen_screen.dart';
 export 'recepcion_oc/recepcion_oc_screen.dart';
 export 'recepcion_oc/ingreso_articulos_screen.dart';
 export 'ajuste_inv/ajuste_inventario_screen.dart';
+export 'entrada_salida/entrada_salida_screen.dart';

@@ -59,9 +59,8 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
                 colorQAD: colorQAD,
                 textFieldAlmacen: textFieldAlmacen(_controllerAlmacen),
                 iconButton: () async {
-                  final descSite = await GetSiteApiDatasource()
-                      .validateSite(
-                          Preferences.dominio, _controllerAlmacen.text);
+                  final descSite = await GetSiteApiDatasource().validateSite(
+                      Preferences.dominio, _controllerAlmacen.text);
 
                   ref.read(validateSiteProvider.notifier).state =
                       descSite.isEmpty ? false : true;
@@ -78,6 +77,8 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
                   Preferences.url = _controllerUrl.text;
                   Preferences.almacen = _controllerAlmacen.text;
                   Preferences.ubicTrans = _controllerUbicTrans.text;
+
+                  context.go('/login');
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
                 child: const Text(
@@ -121,7 +122,6 @@ TextFormField textFieldUrl(TextEditingController controllerUrl) {
     //onChanged: (value) => buscarTpago(value, dbProvider),
   );
 }
-
 
 TextFormField textFieldAlmacen(TextEditingController controllerAlmacen) {
   return TextFormField(

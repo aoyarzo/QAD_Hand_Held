@@ -8,6 +8,7 @@ class Preferences {
   static String _almacen = '';
   static String _ubicTrans = '';
   static String _usuario = '';
+  static String _inicio = 'logout';
 
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -57,4 +58,14 @@ class Preferences {
     _usuario = usuario;
     _prefs.setString('usuario', usuario);
   }
+
+static String get inicio {
+    return _prefs.getString('inicio') ?? _inicio;
+  }
+
+  static set inicio(String inicio) {
+    _inicio = inicio;
+    _prefs.setString('inicio', inicio);
+  }
+
 }
