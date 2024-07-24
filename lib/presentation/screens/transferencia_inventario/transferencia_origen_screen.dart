@@ -27,6 +27,7 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
     final validateLoc = ref.watch(validateLocProvider);
     final validatePart = ref.watch(validatePartProvider);
     final transf = ref.watch(transfChangeNotifierProvider);
+    final validateCantidad = ref.watch(validateCantidadTransfProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -86,10 +87,8 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                             context, colorQAD, 'Artículo No Encontrado');
                       } else {
                         ref.read(validatePartProvider.notifier).state = true;
-
                       }
                       //print(validatePart);
-                      
                     })
                 : Container(),
             validatePart
@@ -107,53 +106,71 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
             validatePart
                 ? CantidadRow(
                     colorQAD: colorQAD,
-                    textFieldCantidad: textFieldCantidad(_controllerCantidad))
+                    textFieldCantidad:
+                        textFieldCantidad(_controllerCantidad, ref))
                 : Container(),
+            validateCantidad ? const ErrorTextValidate() : Container(),
             const SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () async {
-                  //Guarda en Provider
-                  ref.read(transfChangeNotifierProvider.notifier).addTransf(
-                      transf.transf.length + 1,
-                      _controllerArticulo.text,
-                      _controllerUbiOrig.text,
-                      _controllerLoteOrig.text,
-                      _controllerRefOrig.text,
-                      Preferences.ubicTrans,
-                      int.parse(_controllerCantidad.text));
+            ValueListenableBuilder(
+              valueListenable: _controllerCantidad,
+              builder: (context, value, child) {
+                return ElevatedButton(
+                    onPressed: _controllerCantidad.text.isNotEmpty 
+                    && validateLoc && validatePart
+                        ? () async {
+                            if (double.parse(_controllerCantidad.text) > 0) {
+                              //Guarda en Provider
+                              ref
+                                  .read(transfChangeNotifierProvider.notifier)
+                                  .addTransf(
+                                      transf.transf.length + 1,
+                                      _controllerArticulo.text,
+                                      _controllerUbiOrig.text,
+                                      _controllerLoteOrig.text,
+                                      _controllerRefOrig.text,
+                                      Preferences.ubicTrans,
+                                      int.parse(_controllerCantidad.text));
 
-                  //Valida Cantidad
-                  final mensajeResponse = await TransferenciaApiDatasource()
-                      .transferencia(
-                          Preferences.dominio,
-                          _controllerArticulo.text,
-                          Preferences.almacen,
-                          _controllerUbiOrig.text,
-                          _controllerLoteOrig.text,
-                          Preferences.almacen,
-                          Preferences.ubicTrans,
-                          _controllerRefOrig.text,
-                          int.parse(_controllerCantidad.text),
-                          Preferences.usuario);
+                              //Valida Cantidad
+                              final mensajeResponse =
+                                  await TransferenciaApiDatasource()
+                                      .transferencia(
+                                          Preferences.dominio,
+                                          _controllerArticulo.text,
+                                          Preferences.almacen,
+                                          _controllerUbiOrig.text,
+                                          _controllerLoteOrig.text,
+                                          Preferences.almacen,
+                                          Preferences.ubicTrans,
+                                          _controllerRefOrig.text,
+                                          int.parse(_controllerCantidad.text),
+                                          Preferences.usuario);
 
-                  ref.read(responseTransfOrigenProvider.notifier).state =
-                      mensajeResponse[0].mensaje;
+                              ref
+                                  .read(responseTransfOrigenProvider.notifier)
+                                  .state = mensajeResponse[0].mensaje;
 
-                  ref.read(validatePartProvider.notifier).state = false;
-                  ref.read(validateLocProvider.notifier).state = false;
+                              ref.read(validatePartProvider.notifier).state =
+                                  false;
+                              ref.read(validateLocProvider.notifier).state =
+                                  false;
 
-                  //context.go('/transf-inv');
+                              //context.go('/transf-inv');
 
-                  _mensajeResponse(context, colorQAD, ref);
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
-                child: const Text(
-                  'Guardar',
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                )),
+                              _mensajeResponse(context, colorQAD, ref);
+                            }
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                    child: const Text(
+                      'Guardar',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ));
+              },
+            ),
           ],
         ),
       ),
@@ -235,7 +252,8 @@ TextFormField textFieldReferenciaOrigen(
   );
 }
 
-TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
+TextFormField textFieldCantidad(
+    TextEditingController controllerCantidad, WidgetRef ref) {
   return TextFormField(
     controller: controllerCantidad,
     keyboardType: const TextInputType.numberWithOptions(),
@@ -249,7 +267,10 @@ TextFormField textFieldCantidad(TextEditingController controllerCantidad) {
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
-    //onChanged: (value) => buscarTpago(value, dbProvider),
+    onChanged: (value) {
+      ref.read(validateCantidadTransfProvider.notifier).state =
+          double.parse(value) != 0 ? false : true;
+    },
   );
 }
 

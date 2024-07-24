@@ -17,6 +17,10 @@ final transfProvider = StateProvider<String>((ref) {
   return '';
 });
 
+final validateCantidadTransfProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
 //Validaciones Recepción OC
 final validateOrdenProvider = StateProvider<bool>((ref) {
   return false;
@@ -31,6 +35,10 @@ final documentoProvider = StateProvider<String>((ref) {
 });
 
 final validateDetOCProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final validateCantidadRecepcionProvider = StateProvider<bool>((ref) {
   return false;
 });
 

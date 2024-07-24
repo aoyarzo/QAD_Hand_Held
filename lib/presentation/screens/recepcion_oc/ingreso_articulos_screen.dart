@@ -36,6 +36,7 @@ class IngresoArticulosScreen extends ConsumerWidget {
     final ordenCodProv = ref.watch(ordenCodProvProvider);
     final linea = ref.watch(lineaProvider);
     final recepcion_temp = ref.watch(recepcionOCChangeNotifierProvider);
+    final validateCantidad = ref.watch(validateCantidadRecepcionProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -113,7 +114,6 @@ class IngresoArticulosScreen extends ConsumerWidget {
                   if (descArt[0].descripcion.isEmpty) {
                     _mensajeErrorValidacion(
                         context, colorQAD, 'Artículo No Encontrado');
-                  
                   } else {
                     ref.read(validateDetOCProvider.notifier).state = true;
 
@@ -123,19 +123,18 @@ class IngresoArticulosScreen extends ConsumerWidget {
                     ref.read(cantAbiertaProvider.notifier).state =
                         descArt[0].cantAbta;
                     ref.read(precioProvider.notifier).state = descArt[0].precio;
-
-                  }               
+                  }
                   //print(descArt[0].descripcion);
                   //print(validateArt);
-
                 }),
             validateArt ? ArticuloResponseRow(colorQAD: colorQAD) : Container(),
             validateArt
                 ? CantidadRecepcionOCRow(
                     colorQAD: colorQAD,
                     textFieldCantidad:
-                        textFieldCantidadRecepcionOC(_controllerCantidad))
+                        textFieldCantidadRecepcionOC(_controllerCantidad, ref))
                 : Container(),
+            validateCantidad ? const ErrorTextValidate() : Container(),
             validateArt
                 ? LoteRecepcionOCRow(
                     colorQAD: colorQAD,
@@ -175,43 +174,57 @@ class IngresoArticulosScreen extends ConsumerWidget {
                     })
                 : Container(),
             const SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () async {
-                  print(recepcion_temp.recepcion.length + 1);
-                  ref
-                      .read(recepcionOCChangeNotifierProvider.notifier)
-                      .addRecepcionOC(
-                          recepcion_temp.recepcion.length + 1,
-                          orden,
-                          ordenCodProv,
-                          formattedDate,
-                          documento,
-                          _controllerArticulo.text,
-                          linea,
-                          double.parse(_controllerPrecioFactura.text),
-                          double.parse(_controllerCantidad.text),
-                          _controllerLote.text,
-                          _controllerRef.text,
-                          _controllerFechaVenc.text);
+            ValueListenableBuilder(
+              valueListenable: _controllerCantidad,
+              builder: (context, value, child) {
+                return ElevatedButton(
+                    onPressed: _controllerCantidad.text.isNotEmpty 
+                    && validateArt
+                        ? () async {
+                            //print(recepcion_temp.recepcion.length + 1);
 
-                  print(recepcion_temp.recepcion.length);
+                            if (double.parse(_controllerCantidad.text) > 0) {
+                              ref
+                                  .read(recepcionOCChangeNotifierProvider
+                                      .notifier)
+                                  .addRecepcionOC(
+                                      recepcion_temp.recepcion.length + 1,
+                                      orden,
+                                      ordenCodProv,
+                                      formattedDate,
+                                      documento,
+                                      _controllerArticulo.text,
+                                      linea,
+                                      double.parse(
+                                          _controllerPrecioFactura.text),
+                                      double.parse(_controllerCantidad.text),
+                                      _controllerLote.text,
+                                      _controllerRef.text,
+                                      _controllerFechaVenc.text);
 
-                  ref.read(validateDetOCProvider.notifier).state = false;
-                  _controllerArticulo.clear();
-                  _controllerCantidad.clear();
-                  _controllerLote.clear();
-                  _controllerRef.clear();
-                  _controllerPrecioFactura.clear();
-                  _controllerFechaVenc.clear();
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
-                child: const Text(
-                  'Guardar',
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                )),
+                              print(recepcion_temp.recepcion.length);
+
+                              ref.read(validateDetOCProvider.notifier).state =
+                                  false;
+                              _controllerArticulo.clear();
+                              _controllerCantidad.clear();
+                              _controllerLote.clear();
+                              _controllerRef.clear();
+                              _controllerPrecioFactura.clear();
+                              _controllerFechaVenc.clear();
+                            }
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                    child: const Text(
+                      'Guardar',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ));
+              },
+            ),
             const SizedBox(height: 10)
           ],
         ),
@@ -236,22 +249,25 @@ TextFormField textFieldArticuloRecepcionOC(
 }
 
 TextFormField textFieldCantidadRecepcionOC(
-    TextEditingController controllerCantidad) {
+    TextEditingController controllerCantidad, WidgetRef ref) {
   return TextFormField(
-      controller: controllerCantidad,
-      keyboardType: const TextInputType.numberWithOptions(),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
-      ],
-      //autocorrect: false,
-      decoration: inputDecorationTextFormField()
-      /*validator: (value) {
+    controller: controllerCantidad,
+    keyboardType: const TextInputType.numberWithOptions(),
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+    ],
+    //autocorrect: false,
+    decoration: inputDecorationTextFormField(),
+    /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
-      //onChanged: (value) => buscarTpago(value, dbProvider),
-      );
+    onChanged: (value) {
+      ref.read(validateCantidadRecepcionProvider.notifier).state =
+          double.parse(value) != 0 ? false : true;
+    },
+  );
 }
 
 TextFormField textFieldLoteRecepcionOC(TextEditingController controllerLote) {
