@@ -1,8 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/presentation/screens/screens.dart';
+import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/login', 
+  initialLocation: Preferences.inicio == 'login' ? '/transf-inv' : '/login', 
   routes: [
     GoRoute(
       path: '/login',

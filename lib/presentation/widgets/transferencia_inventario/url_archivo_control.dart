@@ -11,17 +11,15 @@ class UrlArchivoControl extends StatelessWidget {
       padding: const EdgeInsets.only(right: 10),
       child: Row(
         children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              height: 70,
-              alignment: Alignment.centerLeft,
-              //color: Colors.green,
-              child: const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text('Url:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              ),
+          Container(
+            height: 60,
+            width: 110,
+            alignment: Alignment.centerLeft,
+            //color: Colors.green,
+            child: const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text('Url:',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
           ),
           Expanded(

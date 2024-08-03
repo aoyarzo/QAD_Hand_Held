@@ -13,7 +13,7 @@ class CantidadAjusteInvRow extends StatelessWidget {
         children: [
           Container(
             height: 60,
-            width: 110,
+            width: 100,
             alignment: Alignment.centerLeft,
             //color: Colors.green,
             child: const Padding(

@@ -35,7 +35,7 @@ class DrawerMenuWidget extends StatelessWidget {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          Preferences.usuario,
+                          Preferences.nombre,
                           style: const TextStyle(fontSize: 14),
                           maxLines: 1,
                         ),
@@ -129,7 +129,10 @@ class DrawerMenuWidget extends StatelessWidget {
               ),
             ),*/
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Preferences.inicio = 'logout';
+                context.go('/login');
+              },
               title:
                   const Text('Cerrar Sesión', style: TextStyle(fontSize: 14)),
               leading: Icon(

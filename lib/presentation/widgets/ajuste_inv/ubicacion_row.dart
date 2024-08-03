@@ -6,12 +6,14 @@ class UbicacionAjusteInv extends ConsumerWidget {
   final Color colorQAD;
   final TextFormField textFieldUbicacion;
   final void Function()? iconButton;
+  final void Function()? iconButtonScanner;
 
   const UbicacionAjusteInv(
       {super.key,
       required this.colorQAD,
       required this.textFieldUbicacion,
-      required this.iconButton});
+      required this.iconButton,
+      required this.iconButtonScanner});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +26,7 @@ class UbicacionAjusteInv extends ConsumerWidget {
         children: [
           Container(
             height: 60,
-            width: 110,
+            width: 100,
             alignment: Alignment.centerLeft,
             //color: Colors.green,
             child: const Padding(
@@ -52,6 +54,17 @@ class UbicacionAjusteInv extends ConsumerWidget {
                 iconSize: 35,
                 color: colorQAD,
                 onPressed: iconButton),
+          ),
+          SizedBox(width: 5),
+          Expanded(
+            flex: 1,
+            child: IconButton(
+                icon: const Icon(
+                  Icons.qr_code_scanner_outlined,
+                ),
+                iconSize: 35,
+                color: colorQAD,
+                onPressed: iconButtonScanner),
           ),
         ],
       ),

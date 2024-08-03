@@ -108,7 +108,7 @@ class EntradaSalidaScreen extends ConsumerWidget {
                 },
               ).toList(),
             ),
-            UbicacionAjusteInv(
+            UbicacionEntradaSalida(
                 colorQAD: colorQAD,
                 textFieldUbicacion:
                     textFieldUbicacionEntradaSalida(_controllerUbicacion),
@@ -127,7 +127,7 @@ class EntradaSalidaScreen extends ConsumerWidget {
                   }
                 }),
             validateLoc
-                ? ArticuloAjusteInvRow(
+                ? ArticuloEntradaSalidaRow(
                     colorQAD: colorQAD,
                     textFieldArticulo:
                         textFieldArticuloEntradaSalida(_controllerArticulo),

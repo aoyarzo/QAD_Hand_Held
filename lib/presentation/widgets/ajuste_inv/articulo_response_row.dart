@@ -19,7 +19,7 @@ class ArticuloResponseAjusteInvRow extends ConsumerWidget {
         children: [
           Container(
             height: 90,
-            width: 110,
+            width: 100,
             alignment: Alignment.centerLeft,
             //color: Colors.green,
             child: const Padding(

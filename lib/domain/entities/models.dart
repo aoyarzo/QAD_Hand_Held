@@ -9,3 +9,4 @@ export 'recepcion_oc/recepcion_oc_model.dart';
 //export 'recepcion_oc/recepcion_model.dart';
 //export 'ajuste_inv/ajuste_inv_model.dart';
 //export 'entrada_salida/entrada_salida_model.dart';
+export 'login/user_model.dart';

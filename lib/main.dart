@@ -8,8 +8,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 void main() async {
-  runApp(const ProviderScope(child: MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
   await Preferences.init();
+  runApp(const ProviderScope(child: MyApp()));
+  
 }
 
 class MyApp extends StatelessWidget {

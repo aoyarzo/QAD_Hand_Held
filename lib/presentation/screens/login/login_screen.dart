@@ -10,11 +10,12 @@ class LoginScreen extends ConsumerWidget {
   static const name = 'login-screen';
 
   final _controllerUsuario = TextEditingController();
+  final _controllerPass = TextEditingController();
 
   LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref ) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
     Color colorQAD2 = const Color(0xFF0b2038);
 
@@ -79,13 +80,13 @@ class LoginScreen extends ConsumerWidget {
                           padding: const EdgeInsets.only(top: 10),
                           child: IconButton(
                               onPressed: () async {
-
-                                final descSite = await GetSiteApiDatasource().
-                                validateSite(Preferences.dominio, Preferences.almacen);
+                                final descSite = await GetSiteApiDatasource()
+                                    .validateSite(Preferences.dominio,
+                                        Preferences.almacen);
 
                                 ref.read(validateSiteProvider.notifier).state =
-                                descSite.isEmpty ? false : true;
-                                
+                                    descSite.isEmpty ? false : true;
+
                                 context.go('/archivo-control');
                               },
                               icon: Icon(
@@ -131,6 +132,8 @@ class LoginScreen extends ConsumerWidget {
                               padding:
                                   const EdgeInsets.only(left: 30, right: 30),
                               child: TextField(
+                                controller: _controllerPass,
+                                obscureText: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.password_outlined,
@@ -150,11 +153,20 @@ class LoginScreen extends ConsumerWidget {
                           width: 180,
                           height: 50,
                           child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                final userResponse =
+                                    await GetUserApiDatasource().getUser(
+                                        _controllerUsuario.text,
+                                        _controllerPass.text);
 
-                                Preferences.usuario = _controllerUsuario.text;
-                                context.go('/transf-inv');
-                                
+                                if (userResponse.isNotEmpty) {
+                                  Preferences.usuario = _controllerUsuario.text;
+                                  Preferences.nombre = userResponse;
+                                  Preferences.inicio = 'login';
+                                  context.go('/transf-inv');
+                                } else {
+                                  await _mensajeErrorLogin(context, colorQAD);
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: colorQAD),
@@ -175,4 +187,40 @@ class LoginScreen extends ConsumerWidget {
       ],
     ));
   }
+}
+
+Future<void> _mensajeErrorLogin(BuildContext context, Color colorQAD) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Icon(Icons.warning_rounded, size: 35, color: colorQAD),
+        content: SizedBox(
+          width: 80,
+          height: 120,
+          child: Column(
+            children: [
+              const Text('Usuario y/o Contraseña Inválidos',
+                  style: TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                  child: const Text(
+                    'Aceptar',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

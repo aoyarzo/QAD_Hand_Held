@@ -8,6 +8,7 @@ class Preferences {
   static String _almacen = '';
   static String _ubicTrans = '';
   static String _usuario = '';
+  static String _nombre = '';
   static String _inicio = 'logout';
 
   static Future init() async {
@@ -61,6 +62,15 @@ class Preferences {
 
 static String get inicio {
     return _prefs.getString('inicio') ?? _inicio;
+  }
+
+  static set nombre(String nombre) {
+    _nombre = nombre;
+    _prefs.setString('nombre', nombre);
+  }
+
+static String get nombre {
+    return _prefs.getString('nombre') ?? _nombre;
   }
 
   static set inicio(String inicio) {

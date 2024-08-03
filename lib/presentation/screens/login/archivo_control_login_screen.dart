@@ -60,7 +60,7 @@ class ArchivoControlLoginScreen extends ConsumerWidget {
                 textFieldAlmacen: textFieldAlmacen(_controllerAlmacen),
                 iconButton: () async {
                   final descSite = await GetSiteApiDatasource().validateSite(
-                      Preferences.dominio, _controllerAlmacen.text);
+                      _controllerDominio.text, _controllerAlmacen.text);
 
                   ref.read(validateSiteProvider.notifier).state =
                       descSite.isEmpty ? false : true;
