@@ -6,12 +6,15 @@ class ArticuloRecepcionOCRow extends ConsumerWidget {
   final Color colorQAD;
   final TextFormField textFieldArticulo;
   final void Function()? iconButton;
+  final void Function()? iconButtonScanner;
+
 
   const ArticuloRecepcionOCRow({
     super.key, 
     required this.colorQAD, 
     required this.textFieldArticulo,
-    required this.iconButton});
+    required this.iconButton,
+    required this.iconButtonScanner});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +27,7 @@ class ArticuloRecepcionOCRow extends ConsumerWidget {
         children: [
           Container(
             height: 60,
-            width: 110,
+            width: 100,
             alignment: Alignment.centerLeft,
             //color: Colors.green,
             child: const Padding(
@@ -43,16 +46,27 @@ class ArticuloRecepcionOCRow extends ConsumerWidget {
             ),
           ),
           Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: Icon(
-                  Icons.check_circle_outline,
-                  color: validateArt ? Colors.green : Colors.red,
-                ),
-                iconSize: 35,
-                color: colorQAD,
-                onPressed: iconButton),
-          ),
+              flex: 1,
+              child: IconButton(
+                  icon: const Icon(
+                    Icons.qr_code_scanner_outlined,
+                  ),
+                  iconSize: 35,
+                  color: colorQAD,
+                  onPressed: iconButtonScanner),
+            ),
+            const SizedBox(width: 5),
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                  icon: Icon(
+                    Icons.check_circle_outline,
+                    color: validateArt ? Colors.green : Colors.red,
+                  ),
+                  iconSize: 35,
+                  color: colorQAD,
+                  onPressed: iconButton),
+            ),
         ],
       ),
     );

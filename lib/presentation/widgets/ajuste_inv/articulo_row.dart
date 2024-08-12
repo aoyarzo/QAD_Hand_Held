@@ -47,6 +47,17 @@ class ArticuloAjusteInvRow extends ConsumerWidget {
           Expanded(
             flex: 1,
             child: IconButton(
+                icon: const Icon(
+                  Icons.qr_code_scanner_outlined,
+                ),
+                iconSize: 35,
+                color: colorQAD,
+                onPressed: iconButtonScanner),
+          ), 
+          const SizedBox(width: 5),
+          Expanded(
+            flex: 1,
+            child: IconButton(
                 icon: Icon(
                   Icons.check_circle_outline,
                   color: validateArt ? Colors.green : Colors.red,
@@ -54,18 +65,7 @@ class ArticuloAjusteInvRow extends ConsumerWidget {
                 iconSize: 35,
                 color: colorQAD,
                 onPressed: iconButton),
-          ),
-          SizedBox(width: 5),
-          Expanded(
-            flex: 1,
-            child: IconButton(
-                icon: const Icon(
-                  Icons.qr_code_scanner_outlined,
-                ),
-                iconSize: 35,
-                color: colorQAD,
-                onPressed: iconButtonScanner),
-          ),       
+          ),      
         ],
       ),
     );

@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CantidadRow extends StatelessWidget {
+class UbicacionConsulta extends ConsumerWidget {
   final Color colorQAD;
-  final TextFormField textFieldCantidad;
+  final TextFormField textFieldUbicacion;
 
-  const CantidadRow({super.key, required this.colorQAD, required this.textFieldCantidad});
+  const UbicacionConsulta(
+      {super.key,
+      required this.colorQAD,
+      required this.textFieldUbicacion});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Row(
         children: [
           Container(
-            height: 65,
+            height: 60,
             width: 100,
             alignment: Alignment.centerLeft,
             //color: Colors.green,
             child: const Padding(
               padding: EdgeInsets.only(left: 10),
-              child: Text('Cantidad:',
+              child: Text('Ubicación:',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
           ),
@@ -28,7 +34,7 @@ class CantidadRow extends StatelessWidget {
               //color: Colors.blue,
               height: 50,
               alignment: Alignment.center,
-              child: textFieldCantidad,
+              child: textFieldUbicacion,
             ),
           ),
         ],

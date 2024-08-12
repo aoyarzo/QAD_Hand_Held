@@ -7,3 +7,4 @@ export 'ajuste_inv/articulo_response_provider.dart';
 export 'response_provider.dart';
 export 'response_recepcion_provider.dart';
 export 'response_entrada_salida_provider.dart';
+export 'cantidad/response_consulta_provider.dart';

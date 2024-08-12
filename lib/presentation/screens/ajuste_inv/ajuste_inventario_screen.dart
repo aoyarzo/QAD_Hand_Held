@@ -119,7 +119,8 @@ class AjusteInventarioScreen extends ConsumerWidget {
                         true;
                     _controllerUbicacion.text = barcodeScanRes;
                   }
-                }),
+                }
+                ),
             validateLoc
                 ? ArticuloAjusteInvRow(
                     colorQAD: colorQAD,

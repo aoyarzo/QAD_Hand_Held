@@ -35,3 +35,6 @@ export 'entrada_salida/cantidad_row.dart';
 export 'entrada_salida/lote_row.dart';
 export 'entrada_salida/referencia_row.dart';
 export 'entrada_salida/ubicacion_row.dart';
+export 'consultas/consulta_response_row.dart';
+export 'consultas/articulo_row.dart';
+export 'consultas/ubicacion_row.dart';

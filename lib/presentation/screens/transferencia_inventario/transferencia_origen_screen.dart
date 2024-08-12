@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
@@ -71,6 +72,24 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                   } else {
                     ref.read(validateLocProvider.notifier).state = true;
                   }
+                },
+                iconButtonScanner: () async {
+                  String barcodeScanRes =
+                      await FlutterBarcodeScanner.scanBarcode(
+                          '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+                  //print(barcodeScanRes);
+                  final descLoc = await GetLocApiDatasource().validateLoc(
+                      Preferences.dominio,
+                      Preferences.almacen,
+                      barcodeScanRes);
+
+                  if (descLoc.isEmpty) {
+                    await _mensajeErrorValidacion(
+                        context, colorQAD, 'Ubicación No Encontrada');
+                  } else {
+                    ref.read(validateLocProvider.notifier).state = true;
+                    _controllerUbiOrig.text = barcodeScanRes;
+                  }
                 }),
             validateLoc
                 ? ArticuloRow(
@@ -89,6 +108,23 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
                         ref.read(validatePartProvider.notifier).state = true;
                       }
                       //print(validatePart);
+                    },
+                    iconButtonScanner: () async {
+                      String barcodeScanRes =
+                          await FlutterBarcodeScanner.scanBarcode(
+                              '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+
+                      final descPart = await GetPartApiDatasource()
+                          .validatePart(
+                              Preferences.dominio, barcodeScanRes);
+
+                      if (descPart[0].descripcion.isEmpty) {
+                        _mensajeErrorValidacion(
+                            context, colorQAD, 'Artículo No Encontrado');
+                      } else {
+                        ref.read(validatePartProvider.notifier).state = true;
+                        _controllerArticulo.text = barcodeScanRes;
+                      }
                     })
                 : Container(),
             validatePart
@@ -115,8 +151,9 @@ class TransferenciaOrigenScreen extends ConsumerWidget {
               valueListenable: _controllerCantidad,
               builder: (context, value, child) {
                 return ElevatedButton(
-                    onPressed: _controllerCantidad.text.isNotEmpty 
-                    && validateLoc && validatePart
+                    onPressed: _controllerCantidad.text.isNotEmpty &&
+                            validateLoc &&
+                            validatePart
                         ? () async {
                             if (double.parse(_controllerCantidad.text) > 0) {
                               //Guarda en Provider

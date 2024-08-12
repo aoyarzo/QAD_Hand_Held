@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -126,6 +127,29 @@ class IngresoArticulosScreen extends ConsumerWidget {
                   }
                   //print(descArt[0].descripcion);
                   //print(validateArt);
+                },
+                iconButtonScanner: () async {
+                  String barcodeScanRes =
+                      await FlutterBarcodeScanner.scanBarcode(
+                          '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+
+                  final descArt = await ValDetOCDatasource().validateDetOC(
+                      Preferences.dominio, orden, barcodeScanRes);
+
+                  if (descArt[0].descripcion.isEmpty) {
+                    _mensajeErrorValidacion(
+                        context, colorQAD, 'Artículo No Encontrado');
+                  } else {
+                    ref.read(validateDetOCProvider.notifier).state = true;
+
+                    ref.read(descripcionProvider.notifier).state =
+                        descArt[0].descripcion;
+                    ref.read(lineaProvider.notifier).state = descArt[0].linea;
+                    ref.read(cantAbiertaProvider.notifier).state =
+                        descArt[0].cantAbta;
+                    ref.read(precioProvider.notifier).state = descArt[0].precio;
+                    _controllerArticulo.text = barcodeScanRes;
+                  }
                 }),
             validateArt ? ArticuloResponseRow(colorQAD: colorQAD) : Container(),
             validateArt
@@ -178,8 +202,8 @@ class IngresoArticulosScreen extends ConsumerWidget {
               valueListenable: _controllerCantidad,
               builder: (context, value, child) {
                 return ElevatedButton(
-                    onPressed: _controllerCantidad.text.isNotEmpty 
-                    && validateArt
+                    onPressed: _controllerCantidad.text.isNotEmpty &&
+                            validateArt
                         ? () async {
                             //print(recepcion_temp.recepcion.length + 1);
 
@@ -206,6 +230,7 @@ class IngresoArticulosScreen extends ConsumerWidget {
 
                               ref.read(validateDetOCProvider.notifier).state =
                                   false;
+                              ref.read(validateOrdenProvider.notifier).state = false;    
                               _controllerArticulo.clear();
                               _controllerCantidad.clear();
                               _controllerLote.clear();

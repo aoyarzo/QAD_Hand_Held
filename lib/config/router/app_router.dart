@@ -51,7 +51,13 @@ final appRouter = GoRouter(
       path: '/entrada-salida',
       name: EntradaSalidaScreen.name,
       builder: (context, state) => EntradaSalidaScreen(),
-      ),                      
+      ),
+
+    GoRoute(
+      path: '/consulta',
+      name: ConsultaScreen.name,
+      builder: (context, state) => ConsultaScreen(),
+      ),                        
       
       ]
     );

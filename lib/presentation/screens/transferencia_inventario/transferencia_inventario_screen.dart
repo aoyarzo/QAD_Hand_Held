@@ -40,6 +40,8 @@ class TransferenciaInventarioScreen extends ConsumerWidget {
                     iconSize: 35,
                     color: Colors.white,
                     onPressed: () {
+                      ref.read(validatePartProvider.notifier).state = false;
+                      ref.read(validateLocProvider.notifier).state = false;
                       context.go('/trans-origen');
 
                       print(transf.transf.length);

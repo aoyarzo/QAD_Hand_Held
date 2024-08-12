@@ -63,3 +63,8 @@ final selectedValueProvider = StateProvider<String>((ref) {
 final validateCantidadEntradaSalidaProvider = StateProvider<bool>((ref) {
   return false;
 });
+
+//Validaciones Consultas de Stock
+final selectedValueConsultaProvider = StateProvider<String>((ref) {
+  return 'Disponible';
+});

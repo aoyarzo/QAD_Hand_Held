@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
 import 'package:qad_hand_held/infraestructure/datasources/entrada_salida/rcp_no_plan_api_datasource.dart';
@@ -125,6 +126,23 @@ class EntradaSalidaScreen extends ConsumerWidget {
                     ref.read(validateLocAjusteInvProvider.notifier).state =
                         true;
                   }
+                },
+                iconButtonScanner: () async {
+                  String barcodeScanRes =
+                      await FlutterBarcodeScanner.scanBarcode(
+                          '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+
+                  final descLoc = await GetLocApiDatasource().validateLoc(
+                      Preferences.dominio, Preferences.almacen, barcodeScanRes);
+
+                  if (descLoc.isEmpty) {
+                    await _mensajeErrorValidacion(
+                        context, colorQAD, 'Ubicación No Encontrada');
+                  } else {
+                    ref.read(validateLocAjusteInvProvider.notifier).state =
+                        true;
+                    _controllerUbicacion.text = barcodeScanRes;
+                  }
                 }),
             validateLoc
                 ? ArticuloEntradaSalidaRow(
@@ -150,6 +168,31 @@ class EntradaSalidaScreen extends ConsumerWidget {
                         ref.read(umArtAjusteInvProvider.notifier).state =
                             descPart[0].um;
                       }
+                    },
+                    iconButtonScanner: () async {
+                      String barcodeScanRes =
+                          await FlutterBarcodeScanner.scanBarcode(
+                              '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+
+                      final descPart = await GetPartApiDatasource()
+                          .validatePart(Preferences.dominio, barcodeScanRes);
+
+                      if (descPart[0].descripcion.isEmpty) {
+                        await _mensajeErrorValidacion(
+                            context, colorQAD, 'Artículo No Encontrado');
+                      } else {
+                        ref.read(validateArtAjusteInvProvider.notifier).state =
+                            true;
+
+                        ref
+                            .read(descripcionArtAjusteInvProvider.notifier)
+                            .state = descPart[0].descripcion;
+
+                        ref.read(umArtAjusteInvProvider.notifier).state =
+                            descPart[0].um;
+
+                        _controllerArticulo.text = barcodeScanRes;
+                      }
                     })
                 : Container(),
             validateArt
@@ -169,8 +212,8 @@ class EntradaSalidaScreen extends ConsumerWidget {
             validateArt
                 ? CantidadAjusteInvRow(
                     colorQAD: colorQAD,
-                    textFieldCantidad:
-                        textFieldCantidadEntradaSalida(_controllerCantidad, ref))
+                    textFieldCantidad: textFieldCantidadEntradaSalida(
+                        _controllerCantidad, ref))
                 : Container(),
             validateCantidad ? const ErrorTextValidate() : Container(),
             const SizedBox(height: 30),
@@ -244,7 +287,7 @@ class EntradaSalidaScreen extends ConsumerWidget {
                                   .state = false;
 
                               await _mensajeResponse(context, colorQAD, ref);
-                            } 
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
@@ -328,23 +371,23 @@ TextFormField textFieldReferenciaEntradaSalida(
 TextFormField textFieldCantidadEntradaSalida(
     TextEditingController controllerCantidad, WidgetRef ref) {
   return TextFormField(
-      controller: controllerCantidad,
-      keyboardType: const TextInputType.numberWithOptions(),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
-      ],
-      //autocorrect: false,
-      decoration: inputDecorationTextFormField(),
-      /*validator: (value) {
+    controller: controllerCantidad,
+    keyboardType: const TextInputType.numberWithOptions(),
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+    ],
+    //autocorrect: false,
+    decoration: inputDecorationTextFormField(),
+    /*validator: (value) {
         return (value != null && value.length < 9 && value.length > 0)
             ? null
             : 'Campo Vacío / Máx. 8 Caracteres';
       },*/
-      onChanged: (value) {
+    onChanged: (value) {
       ref.read(validateCantidadEntradaSalidaProvider.notifier).state =
           double.parse(value) != 0 ? false : true;
     },
-      );
+  );
 }
 
 Future<void> _mensajeResponse(

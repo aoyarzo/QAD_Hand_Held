@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qad_hand_held/presentation/providers/providers.dart';
 import 'package:qad_hand_held/shared_preferences/preferences.dart';
 
-class DrawerMenuWidget extends StatelessWidget {
+class DrawerMenuWidget extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Color colorQAD = const Color(0xFFe97a3b);
 
     return Drawer(
@@ -13,7 +15,7 @@ class DrawerMenuWidget extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: 110,
+              height: 120,
               child: DrawerHeader(
                 margin: const EdgeInsets.only(bottom: 0),
                 decoration: const BoxDecoration(
@@ -67,6 +69,8 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                ref.read(validateDetOCProvider.notifier).state = false;
+                ref.read(validateOrdenProvider.notifier).state = false;
                 context.go('/recepcion-oc');
               },
               title: const Text('Recepción OC', style: TextStyle(fontSize: 14)),
@@ -77,6 +81,8 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                ref.read(validatePartProvider.notifier).state = false;
+                ref.read(validateLocProvider.notifier).state = false;
                 context.go('/transf-inv');
               },
               title: const Text('Transf. Inventario',
@@ -88,6 +94,8 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                ref.read(validateLocAjusteInvProvider.notifier).state = false;
+                ref.read(validateArtAjusteInvProvider.notifier).state = false;
                 context.go('/ajuste-inv');
               },
               title: const Text('Ajuste Inventario',
@@ -99,6 +107,8 @@ class DrawerMenuWidget extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                ref.read(validateLocAjusteInvProvider.notifier).state = false;
+                ref.read(validateArtAjusteInvProvider.notifier).state = false;
                 context.go('/entrada-salida');
               },
               title: const Text('Entrada/Salida No Planif.',
@@ -109,7 +119,9 @@ class DrawerMenuWidget extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                context.go('/consulta');
+              },
               title: const Text('Consultas de Stock',
                   style: TextStyle(fontSize: 14)),
               leading: Icon(

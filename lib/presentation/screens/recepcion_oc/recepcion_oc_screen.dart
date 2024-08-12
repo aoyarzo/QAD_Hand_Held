@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qad_hand_held/infraestructure/datasources/datasource.dart';
@@ -101,6 +102,31 @@ class RecepcionOCScreen extends ConsumerWidget {
                         _controllerDocumento.text;
                   }
                   //print(descLoc);
+                },
+                iconButtonScanner: () async {
+                  String barcodeScanRes =
+                      await FlutterBarcodeScanner.scanBarcode(
+                          '#3D8BEF', 'Cancelar', false, ScanMode.BARCODE);
+
+                  final descLoc = await ValOCApiDatasource()
+                      .validateOC(Preferences.dominio, barcodeScanRes);
+
+                  if (descLoc[0].codProv.isEmpty) {
+                    _mensajeErrorValidacion(
+                        context, colorQAD, 'Orden No Encontrada');
+                  } else {
+                    ref.read(validateOrdenProvider.notifier).state = true;
+
+                    ref.read(ordenCodProvProvider.notifier).state =
+                        descLoc[0].codProv;
+                    ref.read(ordenNombreProvProvider.notifier).state =
+                        descLoc[0].nombre;
+                    ref.read(ordenProvider.notifier).state =
+                        _controllerOrden.text;
+                    ref.read(documentoProvider.notifier).state =
+                        _controllerDocumento.text;
+                    _controllerOrden.text = barcodeScanRes;
+                  }
                 }),
             validateOrden ? ProveedorRow(colorQAD: colorQAD) : Container(),
             validateOrden
@@ -114,23 +140,25 @@ class RecepcionOCScreen extends ConsumerWidget {
               valueListenable: _controllerDocumento,
               builder: (context, value, child) {
                 return ElevatedButton(
-                  onPressed: _controllerDocumento.text.isNotEmpty && validateOrden
-                      ? () async {
-                          context.go('/ingreso-arts');
-                          ref
-                          .read(responseRecepcionChangeNotifierProvider.notifier)
-                          .clearRecepcion();
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ));
-              },              
+                    onPressed: _controllerDocumento.text.isNotEmpty &&
+                            validateOrden
+                        ? () async {
+                            context.go('/ingreso-arts');
+                            ref
+                                .read(responseRecepcionChangeNotifierProvider
+                                    .notifier)
+                                .clearRecepcion();
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(backgroundColor: colorQAD),
+                    child: const Text(
+                      'Siguiente',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ));
+              },
             ),
             const SizedBox(height: 10)
           ],
